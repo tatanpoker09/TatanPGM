@@ -1,0 +1,8 @@
+name: TatanPGM
+main: cl.eilers.tatanpoker09.Scrimmage
+version: 0.01
+description: A plugin for OCN-type Scrimmages.
+author: tatanpoker09
+commands:
+  setserver:
+    description: Creates a server with its sign.
