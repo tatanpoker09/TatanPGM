@@ -30,7 +30,8 @@ public class Setnext implements CommandExecutor {
 				i++;
 			}
 			mapName += mapName.substring(1);
-			p
+			//Se necesita if para ver si existe
+			plugin.getConfig().set("TatanPGM.NextMap", mapName);
 			//Necesita un if! sender.sendMessage(ChatColor.RED + "Couldn't find map: " + ChatColor.BOLD + "'"+ mapName + "'");
 		} else {
 			sender.sendMessage("Maps directory didn't exist. Creating it for you");
