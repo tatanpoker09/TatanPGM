@@ -29,13 +29,16 @@ public class Setnext implements CommandExecutor {
 				mapName += " " + args[i];
 				i++;
 			}
-			mapName += mapName.substring(1);
-			//Se necesita if para ver si existe
-			plugin.getConfig().set("TatanPGM.NextMap", mapName);
-			//Necesita un if! sender.sendMessage(ChatColor.RED + "Couldn't find map: " + ChatColor.BOLD + "'"+ mapName + "'");
-		} else {
-			sender.sendMessage("Maps directory didn't exist. Creating it for you");
-			mapDirExists.mkdir();
+			mapName = mapName.substring(1);
+			File src = new File("maps/"+mapName);
+			if(src.exists()){
+				//Se necesita if para ver si existe
+				sender.sendMessage(mapName);
+				plugin.getConfig().set("TatanPGM.NextMap", mapName);
+				sender.sendMessage(plugin.getConfig().getString("TatanPGM.NextMap") + " Has been set for the next match!");
+			} else {
+				sender.sendMessage("Couldn't find map by the name: '"+ mapName+"'");
+			}
 		}
 		return true;
 	}

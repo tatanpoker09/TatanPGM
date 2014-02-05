@@ -1,6 +1,3 @@
-//Problems: COMMAND BUG
-
-
 package cl.eilers.tatanpoker09;
 
 import java.io.File;
@@ -34,7 +31,6 @@ public final class Scrimmage extends JavaPlugin implements Listener {
 		this.getConfig().addDefault("TatanPGM.serverName", "A TatanPGM Server!");
 		loadConfiguration();
 		this.saveDefaultConfig();
-		this.getConfig().options().copyDefaults(true);
 		//Listeners
 		PluginManager pm = Bukkit.getServer().getPluginManager();
 		pm.registerEvents(this, this);

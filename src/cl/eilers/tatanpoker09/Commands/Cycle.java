@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.command.Command;
@@ -34,32 +35,35 @@ public class Cycle implements CommandExecutor {
 						Bukkit.broadcastMessage("Cycling to " +plugin.getConfig().getString("TatanPGM.NextMap")+" in "+countdown);
 						countdown--;
 					} else {
+						File src = new File("maps/"+plugin.getConfig().getString("TatanPGM.NextMap"));
 						//Random variables needed.
 						Player playerSender = (Player)sender;
 						World mapBefore = playerSender.getWorld();
 						String beforeMap = mapBefore.getName();
 						File mapDone = new File(beforeMap);
-						File src = new File("maps/"+plugin.getConfig().getString("TatanPGM.NextMap"));
+						//TEST *****
+						sender.sendMessage("CONFIG HAS THE THING: " + plugin.getConfig().getString("TatanPGM.NextMap"));
+						//TEST *****
 						File dest = new File(plugin.getConfig().getString("TatanPGM.NextMap"));
 						World nextWorld = new WorldCreator(plugin.getConfig().getString("TatanPGM.NextMap")).createWorld();
 
 						//Copies the map from /maps to the main folder.
+						sender.sendMessage(ChatColor.GREEN + "Loading map: " + ChatColor.BOLD + dest);
+						dest.mkdir();
 						try {
 							FileUtils.copyFolder(src, dest);
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 						for(Player playersOnWorld : Bukkit.getOnlinePlayers()){
-							if(playersOnWorld.getWorld().getName().equalsIgnoreCase(beforeMap)){
-								playersOnWorld.teleport(nextWorld.getSpawnLocation());
-							}
+							playersOnWorld.teleport(nextWorld.getSpawnLocation());
 						}
 						//Unloads last played world
 						Bukkit.unloadWorld(mapBefore, true);
 						//Last played world is deleted
 						FileUtils.delete(mapDone);
 						countdown--;
+
 					}
 				}
 			}
