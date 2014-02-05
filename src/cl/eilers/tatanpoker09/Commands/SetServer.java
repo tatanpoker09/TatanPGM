@@ -16,7 +16,6 @@ public class SetServer implements CommandExecutor {
 	private File DontModify = new File("plugins/TatanPGM/DontModify.yml");
 
 	@SuppressWarnings("deprecation")
-	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (args.length < 1) {
 			sender.sendMessage("You didn't type the server name!");

@@ -16,7 +16,9 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import cl.eilers.tatanpoker09.Commands.Cycle;
 import cl.eilers.tatanpoker09.Commands.SetServer;
+import cl.eilers.tatanpoker09.Commands.Setnext;
 
 public final class Scrimmage extends JavaPlugin implements Listener {
 	private File DontModify = new File("plugins/TatanPGM/DontModify.yml");
@@ -25,6 +27,8 @@ public final class Scrimmage extends JavaPlugin implements Listener {
 	public void onEnable(){
 		//Commands
 		getCommand("setserver").setExecutor(new SetServer());
+		getCommand("setnext").setExecutor(new Setnext(this));
+		getCommand("cycle").setExecutor(new Cycle(this));
 		//Config Thingies
 		createYML(DontModify);
 		this.getConfig().addDefault("TatanPGM.serverName", "A TatanPGM Server!");

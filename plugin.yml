@@ -6,3 +6,7 @@ author: tatanpoker09
 commands:
   setserver:
     description: Creates a server with its sign.
+  setnext:
+    description: Sets the next map.
+  cycle:
+    description: Cycles to the next map.
