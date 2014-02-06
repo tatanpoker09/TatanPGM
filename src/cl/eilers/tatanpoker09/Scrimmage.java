@@ -13,9 +13,9 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import cl.eilers.tatanpoker09.Commands.Cycle;
-import cl.eilers.tatanpoker09.Commands.SetServer;
-import cl.eilers.tatanpoker09.Commands.Setnext;
+import cl.eilers.tatanpoker09.commands.Cycle;
+import cl.eilers.tatanpoker09.commands.SetServer;
+import cl.eilers.tatanpoker09.commands.Setnext;
 
 public final class Scrimmage extends JavaPlugin implements Listener {
 	private File DontModify = new File("plugins/TatanPGM/DontModify.yml");

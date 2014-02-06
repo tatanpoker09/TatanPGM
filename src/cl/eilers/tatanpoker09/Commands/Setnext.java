@@ -1,4 +1,4 @@
-package cl.eilers.tatanpoker09.Commands;
+package cl.eilers.tatanpoker09.commands;
 
 import java.io.File;
 
@@ -35,6 +35,7 @@ public class Setnext implements CommandExecutor {
 				//Se necesita if para ver si existe
 				sender.sendMessage(mapName);
 				plugin.getConfig().set("TatanPGM.NextMap", mapName);
+				plugin.saveConfig();
 				sender.sendMessage(plugin.getConfig().getString("TatanPGM.NextMap") + " Has been set for the next match!");
 			} else {
 				sender.sendMessage("Couldn't find map by the name: '"+ mapName+"'");

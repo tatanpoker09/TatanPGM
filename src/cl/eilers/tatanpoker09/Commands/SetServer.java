@@ -1,4 +1,4 @@
-package cl.eilers.tatanpoker09.Commands;
+package cl.eilers.tatanpoker09.commands;
 
 import java.io.File; 
 

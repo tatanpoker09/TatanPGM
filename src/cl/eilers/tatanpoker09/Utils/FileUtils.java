@@ -1,4 +1,4 @@
-package cl.eilers.tatanpoker09.Utils;
+package cl.eilers.tatanpoker09.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
