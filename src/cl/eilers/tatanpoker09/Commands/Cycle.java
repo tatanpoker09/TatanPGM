@@ -27,40 +27,46 @@ public class Cycle implements CommandExecutor {
 	public boolean onCommand(final CommandSender sender, Command cmd, String label, String[] args) {
 		//Countdown and stuff :3
 		if(args.length>0){
-			countdown = Integer.parseInt(args[0]);
-			Player playerSender = (Player)sender;
-			final World mapBefore = playerSender.getWorld();
-			sender.sendMessage(mapBefore.getName());
-			File src = new File("maps/"+plugin.getConfig().getString("TatanPGM.NextMap"));
-			//Random variables needed.
-			String beforeMap = mapBefore.getName();
-			File mapDone = new File(beforeMap);
-			File dest = new File(plugin.getConfig().getString("TatanPGM.NextMap"));
-			World nextWorld = new WorldCreator(plugin.getConfig().getString("TatanPGM.NextMap")).createWorld();
-
-			//Copies the map from /maps to the main folder.
-			if(Timer.this.Start(countdown)){
-				sender.sendMessage(ChatColor.GREEN + "Loading map: " + ChatColor.BOLD + dest);
+			if(sender instanceof Player){
+				String NextMap = plugin.getConfig().getString("TatanPGM.NextMap");
+				countdown = Integer.parseInt(args[0]);
+				Player playerSender = (Player)sender;
+				final World mapBefore = playerSender.getWorld();
+				sender.sendMessage(mapBefore.getName());
+				File src = new File("maps/"+NextMap);
+				//Random variables needed.
+				String beforeMap = mapBefore.getName();
+				File mapDone = new File(beforeMap);
+				File dest = new File(NextMap);
 				dest.mkdir();
-				try {
-					FileUtils.copyFolder(src, dest);
-				} catch (IOException e) {
-					e.printStackTrace();
+
+				//Copies the map from /maps to the main folder.
+				final Timer timer = new Timer(plugin);
+				if(timer.Start(countdown)==true){
+					sender.sendMessage(ChatColor.GREEN + "Loading map: " + ChatColor.BOLD + dest);
+					try {
+						FileUtils.copyFolder(src, dest);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					World nextWorld = new WorldCreator(NextMap).createWorld();
+					for(Player playersOnWorld : Bukkit.getOnlinePlayers()){
+						playersOnWorld.teleport(nextWorld.getSpawnLocation());
+					}
+					//PROBLEM IN HERE, NOT SURE WHAT IT IS
+					//Unloads last played world
+					if(!mapBefore.getName().equals("spawn")){
+						Bukkit.unloadWorld(mapBefore, true);
+						//Last played world is deleted
+						FileUtils.delete(mapDone);
+					}
 				}
-				for(Player playersOnWorld : Bukkit.getOnlinePlayers()){
-					playersOnWorld.teleport(nextWorld.getSpawnLocation());
-				}
-				//PROBLEM IN HERE, NOT SURE WHAT IT IS
-				//Unloads last played world
-				if(!mapBefore.getName().equals("spawn")){
-					Bukkit.unloadWorld(mapBefore, true);
-					//Last played world is deleted
-					FileUtils.delete(mapDone);
-				}
-			}
 			} else {
-				sender.sendMessage("Please add the time (in seconds)");
+				sender.sendMessage("You must be a player to cast this command.");
 			}
+		} else {
+			sender.sendMessage("Please add the time (in seconds)");
+		}
 		return true;
 	}
 }

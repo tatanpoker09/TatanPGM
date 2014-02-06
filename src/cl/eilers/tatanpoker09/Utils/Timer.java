@@ -9,19 +9,24 @@ public class Timer {
 	public Timer(Scrimmage instance) {
 		plugin = instance;
 	}
+	transient int gameCountdownTimer;
 	public boolean Start(int seconds){
-		plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(plugin, new Runnable(){
+		gameCountdownTimer = plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(plugin, new Runnable(){
+			int seconds;
+			@Override
 			public void run(){
 				if(seconds != -1){
 					if(seconds != 0){
-						if(plugin.getConfig().getBoolean("TatanPGM.CancelTimer")== false){
-							seconds--;
-						}
+						seconds--;
 						Bukkit.broadcastMessage("Cycling to " +plugin.getConfig().getString("TatanPGM.NextMap")+" in "+seconds);
-						secs--;
+						seconds--;
 					}
 				}
 			}
 		},0L, 20L);
+		return true;
+	}
+	public void Cancel(){
+		Bukkit.getServer().getScheduler().cancelTask(gameCountdownTimer);
 	}
 }
