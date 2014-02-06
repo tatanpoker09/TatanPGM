@@ -27,47 +27,51 @@ public class Cycle implements CommandExecutor {
 	@SuppressWarnings("deprecation")
 	public boolean onCommand(final CommandSender sender, Command cmd, String label, String[] args) {
 		//Countdown and stuff :3
-		countdown = Integer.parseInt(args[0]);
-		plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(plugin, new Runnable(){
-			public void run(){
-				if(countdown != -1){
-					if(countdown != 0){
-						Bukkit.broadcastMessage("Cycling to " +plugin.getConfig().getString("TatanPGM.NextMap")+" in "+countdown);
-						countdown--;
-					} else {
-						File src = new File("maps/"+plugin.getConfig().getString("TatanPGM.NextMap"));
-						//Random variables needed.
-						Player playerSender = (Player)sender;
-						World mapBefore = playerSender.getWorld();
-						String beforeMap = mapBefore.getName();
-						File mapDone = new File(beforeMap);
-						//TEST *****
-						sender.sendMessage("CONFIG HAS THE THING: " + plugin.getConfig().getString("TatanPGM.NextMap"));
-						//TEST *****
-						File dest = new File(plugin.getConfig().getString("TatanPGM.NextMap"));
-						World nextWorld = new WorldCreator(plugin.getConfig().getString("TatanPGM.NextMap")).createWorld();
+		if(args.length>0){
+			countdown = Integer.parseInt(args[0]);
+			Player playerSender = (Player)sender;
+			final World mapBefore = playerSender.getWorld();
+			sender.sendMessage(mapBefore.getName());
+			plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(plugin, new Runnable(){
+				public void run(){
+					if(countdown != -1){
+						if(countdown != 0){
+							Bukkit.broadcastMessage("Cycling to " +plugin.getConfig().getString("TatanPGM.NextMap")+" in "+countdown);
+							countdown--;
+						} else {
+							File src = new File("maps/"+plugin.getConfig().getString("TatanPGM.NextMap"));
+							//Random variables needed.
+							String beforeMap = mapBefore.getName();
+							File mapDone = new File(beforeMap);
+							File dest = new File(plugin.getConfig().getString("TatanPGM.NextMap"));
+							World nextWorld = new WorldCreator(plugin.getConfig().getString("TatanPGM.NextMap")).createWorld();
 
-						//Copies the map from /maps to the main folder.
-						sender.sendMessage(ChatColor.GREEN + "Loading map: " + ChatColor.BOLD + dest);
-						dest.mkdir();
-						try {
-							FileUtils.copyFolder(src, dest);
-						} catch (IOException e) {
-							e.printStackTrace();
+							//Copies the map from /maps to the main folder.
+							sender.sendMessage(ChatColor.GREEN + "Loading map: " + ChatColor.BOLD + dest);
+							dest.mkdir();
+							try {
+								FileUtils.copyFolder(src, dest);
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+							for(Player playersOnWorld : Bukkit.getOnlinePlayers()){
+								playersOnWorld.teleport(nextWorld.getSpawnLocation());
+							}
+							//PROBLEM IN HERE, DELETES SPAWN
+							//Unloads last played world
+							if(!mapBefore.getName().equals("spawn")){
+								Bukkit.unloadWorld(mapBefore, true);
+								//Last played world is deleted
+								FileUtils.delete(mapDone);
+								countdown--;
+							}
 						}
-						for(Player playersOnWorld : Bukkit.getOnlinePlayers()){
-							playersOnWorld.teleport(nextWorld.getSpawnLocation());
-						}
-						//Unloads last played world
-						Bukkit.unloadWorld(mapBefore, true);
-						//Last played world is deleted
-						FileUtils.delete(mapDone);
-						countdown--;
-
 					}
 				}
-			}
-		}, 0L, 20L);
+			}, 0L, 20L);
+		} else {
+			sender.sendMessage("Please add the time (in seconds)");
+		}
 		return true;
 	}
 }
