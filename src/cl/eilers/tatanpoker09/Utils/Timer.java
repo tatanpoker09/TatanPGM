@@ -1,32 +1,34 @@
 package cl.eilers.tatanpoker09.utils;
 
-import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
-import cl.eilers.tatanpoker09.Scrimmage;
-@SuppressWarnings("deprecation")
-public class Timer {
-	private Scrimmage plugin;
-	public Timer(Scrimmage instance) {
-		plugin = instance;
-	}
-	transient int gameCountdownTimer;
-	public boolean Start(int seconds){
-		gameCountdownTimer = plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(plugin, new Runnable(){
-			int seconds;
-			@Override
-			public void run(){
-				if(seconds != -1){
-					if(seconds != 0){
-						seconds--;
-						Bukkit.broadcastMessage("Cycling to " +plugin.getConfig().getString("TatanPGM.NextMap")+" in "+seconds);
-						seconds--;
-					}
-				}
-			}
-		},0L, 20L);
-		return true;
-	}
-	public void Cancel(){
-		Bukkit.getServer().getScheduler().cancelTask(gameCountdownTimer);
-	}
+public class Timer extends BukkitRunnable {
+	 
+    private final JavaPlugin plugin;
+ 
+    private int counter;
+ 
+    public Timer(JavaPlugin plugin, int counter) {
+        this.plugin = plugin;
+        if (counter < 1) {
+        	throw new IllegalArgumentException("You must supply a number");
+        } else {
+            this.counter = counter;
+        }
+    }
+ 
+    @Override
+    public void run() {
+        // What you want to schedule goes here
+        if (counter > 0) { 
+        	plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA+"Cycling to "+ChatColor.AQUA+plugin.getConfig().getString("TatanPGM.NextMap")+ChatColor.DARK_AQUA+" in "+ChatColor.DARK_RED+counter--+ChatColor.DARK_AQUA+" seconds!");
+        } else {
+        	plugin.getConfig().set("TatanPGM.CountdownFinished", true);
+        	plugin.saveConfig();
+        	this.cancel();
+        }
+    }
+ 
 }
