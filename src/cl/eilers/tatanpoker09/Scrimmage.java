@@ -16,6 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import cl.eilers.tatanpoker09.commands.Cycle;
 import cl.eilers.tatanpoker09.commands.SetServer;
 import cl.eilers.tatanpoker09.commands.Setnext;
+import cl.eilers.tatanpoker09.listeners.ChatListener;
 
 public final class Scrimmage extends JavaPlugin implements Listener {
 	private File DontModify = new File("plugins/TatanPGM/DontModify.yml");
@@ -34,6 +35,7 @@ public final class Scrimmage extends JavaPlugin implements Listener {
 		//Listeners
 		PluginManager pm = Bukkit.getServer().getPluginManager();
 		pm.registerEvents(this, this);
+		pm.registerEvents(new ChatListener(), this);
 	}
 	@Override
 	public void onDisable(){
