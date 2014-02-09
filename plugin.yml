@@ -10,3 +10,5 @@ commands:
     description: Sets the next map.
   cycle:
     description: Cycles to the next map.
+  cancel:
+    description: Cancels the countdown.

@@ -7,17 +7,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
-import org.bukkit.scoreboard.Team;
 
 import cl.eilers.tatanpoker09.utils.FileUtils;
 
 public class MapLoader {
 	public static void Load(String nextMap){
 		//Initializing Scoreboard.
-		ScoreboardManager manager = Bukkit.getScoreboardManager();
-	    Scoreboard board = manager.getNewScoreboard();
+		//TODO
+		
+		
 		File src = new File("maps/"+nextMap);
 		/*Possible thing for same map?
 		 * if(mapBefore.getName().equals(nextMap)) {
@@ -34,11 +32,7 @@ public class MapLoader {
 		}
 		
 		//Starts With XML Stuff
-		String[] teamInfo = MapXMLLoading.teamXML(nextMap);
-		String teamColor = teamInfo[0];
-		String teamName = teamInfo[2];
-		Team team1 = board.registerNewTeam(teamName);
-		Team team2 = board.registerNewTeam(teamName);
+
 		
 		//Unloads last played world
 		/*if(!mapBefore.getName().equals("spawn")){
@@ -49,7 +43,7 @@ public class MapLoader {
 		}*/
 		World nextWorld = new WorldCreator(nextMap).createWorld();
 		for(Player playersOnWorld : Bukkit.getOnlinePlayers()){
-			playersOnWorld.teleport(nextWorld.getSpawnLocation());
+			playersOnWorld.teleport(nextWorld.getSpawnLocation());			
 		}
 	}
 }

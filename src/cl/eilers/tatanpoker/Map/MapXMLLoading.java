@@ -13,6 +13,7 @@ public class MapXMLLoading {
 	static String maxPlayers;
 	static String teamColor;
 	static String teamName;
+	static String[] teamInfo;
 	public static String[] teamXML(String nextMap){
 		try{
 		File mapXML = new File("/maps"+nextMap+"/map.xml");
@@ -28,7 +29,8 @@ public class MapXMLLoading {
 				teamColor = team.getAttribute("color");
 				maxPlayers = team.getAttribute("max");
 				teamName = ""+ team.getElementsByTagName("team");
-			
+				teamInfo[0] = teamColor;
+				teamInfo[1] = maxPlayers;
 			}
 		}
 			
@@ -37,6 +39,6 @@ public class MapXMLLoading {
     } catch (Exception e) {
 	e.printStackTrace();
     }
-		return new String[] {teamColor, maxPlayers, teamName};
+		return teamInfo;
 	}
 }
