@@ -7,8 +7,12 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 public class CommandsListener implements Listener{
 	@EventHandler
 	public void OnCommand(PlayerCommandPreprocessEvent event){
-		if(!event.getPlayer().getWorld().getName().equalsIgnoreCase("spawn")){
-			event.setCancelled(true);
+		String commandString = event.getMessage();
+		commandString=commandString.substring(1);
+		if(commandString.contains("kill")){
+			if(!event.getPlayer().getWorld().getName().equalsIgnoreCase("spawn")){
+				event.setCancelled(true);
+			}
 		}
 	}
 }
