@@ -1,10 +1,9 @@
 package cl.eilers.tatanpoker09.utils;
 
 import org.bukkit.ChatColor;
-import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import cl.eilers.tatanpoker.Map.MapLoader;
+import cl.eilers.tatanpoker.map.MapLoader;
 import cl.eilers.tatanpoker09.Scrimmage;
 
 public class Timer extends BukkitRunnable {
@@ -13,9 +12,7 @@ public class Timer extends BukkitRunnable {
 
 	private int counter;
 
-	private World mapBefore;
-
-	public Timer(Scrimmage plugin, int counter, World mapBefore) {
+	public Timer(Scrimmage plugin, int counter) {
 		this.plugin = plugin;
 		if (counter < 1) {
 			throw new IllegalArgumentException("You must supply a number");
@@ -33,7 +30,7 @@ public class Timer extends BukkitRunnable {
 				this.cancel();
 			}
 		} else {
-			MapLoader.Load(plugin.getConfig().getString("TatanPGM.NextMap"), mapBefore);
+			MapLoader.Load(plugin.getConfig().getString("TatanPGM.NextMap"));
 			this.cancel();
 		}
 	}
