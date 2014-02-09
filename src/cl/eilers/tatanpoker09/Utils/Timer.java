@@ -1,16 +1,21 @@
 package cl.eilers.tatanpoker09.utils;
 
 import org.bukkit.ChatColor;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import cl.eilers.tatanpoker.Map.MapLoader;
+import cl.eilers.tatanpoker09.Scrimmage;
 
 public class Timer extends BukkitRunnable {
 
-	private final JavaPlugin plugin;
+	private final Scrimmage plugin;
 
 	private int counter;
 
-	public Timer(JavaPlugin plugin, int counter) {
+	private World mapBefore;
+
+	public Timer(Scrimmage plugin, int counter, World mapBefore) {
 		this.plugin = plugin;
 		if (counter < 1) {
 			throw new IllegalArgumentException("You must supply a number");
@@ -19,7 +24,6 @@ public class Timer extends BukkitRunnable {
 		}
 	}
 
-	@Override
 	public void run() {
 		// What you want to schedule goes here
 		if (counter > 0) {
@@ -29,8 +33,7 @@ public class Timer extends BukkitRunnable {
 				this.cancel();
 			}
 		} else {
-			plugin.getConfig().set("TatanPGM.CountdownFinished", true);
-			plugin.saveConfig();
+			MapLoader.Load(plugin.getConfig().getString("TatanPGM.NextMap"), mapBefore);
 			this.cancel();
 		}
 	}

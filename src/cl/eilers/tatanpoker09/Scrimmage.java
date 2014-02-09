@@ -13,6 +13,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import cl.eilers.tatanpoker09.commands.Cancel;
 import cl.eilers.tatanpoker09.commands.Cycle;
 import cl.eilers.tatanpoker09.commands.SetServer;
 import cl.eilers.tatanpoker09.commands.Setnext;
@@ -27,6 +28,7 @@ public final class Scrimmage extends JavaPlugin implements Listener {
 		getCommand("setserver").setExecutor(new SetServer());
 		getCommand("setnext").setExecutor(new Setnext(this));
 		getCommand("cycle").setExecutor(new Cycle(this));
+		getCommand("cancel").setExecutor(new Cancel(this));
 		//Config Thingies
 		createYML(DontModify);
 		this.getConfig().addDefault("TatanPGM.serverName", "A TatanPGM Server!");
