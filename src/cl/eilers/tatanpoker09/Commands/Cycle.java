@@ -5,6 +5,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import cl.eilers.tatanpoker.map.MapLoader;
 import cl.eilers.tatanpoker09.Scrimmage;
 import cl.eilers.tatanpoker09.utils.Timer;
 
@@ -12,23 +13,43 @@ import cl.eilers.tatanpoker09.utils.Timer;
 
 public class Cycle implements CommandExecutor {
 	private Scrimmage plugin;
+	
 	public Cycle(Scrimmage instance) {
 		plugin = instance;
 	}
+	
 	int countdown;
+	
 	public boolean onCommand(final CommandSender sender, Command cmd, String label, String[] args) {
 		//Countdown and stuff :3
+		if(Scrimmage.tList.size() == 0){
+			return runTimer(sender, cmd, label, args);
+		}else{
+			for(Timer t: Scrimmage.tList){
+				t.cancel();
+			}
+			Scrimmage.tList.clear();
+			return runTimer(sender, cmd, label, args);
+		}
+	}
+	
+	private boolean runTimer(final CommandSender sender, Command cmd, String label, String[] args){
 		if(args.length>0){
-			countdown = Integer.parseInt(args[0]);
-			if(sender instanceof Player){
-			} else {
+			if(args[0].equals("0")){
+				MapLoader.Load(plugin.getConfig().getString("TatanPGM.NextMap"),((Player)sender).getWorld() );
+			if(!(sender instanceof Player)){
 				sender.sendMessage("You must be a player to cast this command.");
+				}
+			} else {
+				countdown = Integer.parseInt(args[0]);
+				Scrimmage.tList.add(new Timer(this.plugin, countdown, ((Player)sender).getWorld()));
+				Scrimmage.tList.get(0).runTaskTimer(plugin, 0L, 20L);
+				plugin.getConfig().set("TatanPGM.CancelCountdown", false);
+				return true;
 			}
 		} else {
 			countdown = 15;
 		}
-		new Timer(this.plugin, countdown).runTaskTimer(plugin, 0L, 20L);
-		plugin.getConfig().set("TatanPGM.CancelCountdown", false);
-		return true;
+		return false;
 	}
 }

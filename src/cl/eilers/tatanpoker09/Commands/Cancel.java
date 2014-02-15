@@ -16,9 +16,6 @@ public class Cancel implements CommandExecutor{
 		plugin = instance;
 	}
 	public boolean onCommand(final CommandSender sender, Command cmd, String label, String[] args) {
-			plugin.getConfig().set("TatanPGM.CancelCountdown", true);
-			plugin.saveConfig();
-			sender.sendMessage(ChatColor.GREEN+"Countdowns Cancelled");
 		return true;
 	}
 }

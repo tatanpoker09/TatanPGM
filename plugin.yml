@@ -3,6 +3,7 @@ main: cl.eilers.tatanpoker09.Scrimmage
 version: 0.01
 description: A plugin for OCN-type Scrimmages.
 author: tatanpoker09
+authors: [pavilion99]
 commands:
   setserver:
     description: Creates a server with its sign.
@@ -12,3 +13,5 @@ commands:
     description: Cycles to the next map.
   cancel:
     description: Cancels the countdown.
+  lobby:
+    description: Teleports you to the lobby.
