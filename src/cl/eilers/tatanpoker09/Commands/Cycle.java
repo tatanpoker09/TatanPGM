@@ -5,7 +5,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import cl.eilers.tatanpoker.map.MapLoader;
+import cl.eilers.tatanpoker09.map.*;
 import cl.eilers.tatanpoker09.Scrimmage;
 import cl.eilers.tatanpoker09.utils.Timer;
 

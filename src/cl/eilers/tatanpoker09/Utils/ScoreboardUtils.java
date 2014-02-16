@@ -1,4 +1,4 @@
-package cl.eilers.tatanpoker.map;
+package cl.eilers.tatanpoker09.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -12,8 +12,9 @@ import org.bukkit.scoreboard.Team;
 
 import cl.eilers.tatanpoker09.Scrimmage;
 import cl.eilers.tatanpoker09.listeners.ChatListener;
+import cl.eilers.tatanpoker09.map.MapXMLLoading;
 
-public class ScoreboardUtil {
+public class ScoreboardUtils {
 	public static ScoreboardManager scoreBManager;
 	public static Scoreboard objectivesBoard;
 	
@@ -31,9 +32,9 @@ public class ScoreboardUtil {
 		Scoreboard objectivesBoard = scoreBManager.getNewScoreboard();
 		
 		//Teams
-		Team teamOne = ScoreboardUtil.objectivesBoard.registerNewTeam("FirstTeam");
-		Team teamTwo = ScoreboardUtil.objectivesBoard.registerNewTeam("SecondTeam");
-		Team observers = ScoreboardUtil.objectivesBoard.registerNewTeam("Observers");
+		Team teamOne = ScoreboardUtils.objectivesBoard.registerNewTeam("FirstTeam");
+		Team teamTwo = ScoreboardUtils.objectivesBoard.registerNewTeam("SecondTeam");
+		Team observers = ScoreboardUtils.objectivesBoard.registerNewTeam("Observers");
 		
 		teamOne.setPrefix(ChatListener.stringToColor(teamOneColor)+"");
 		teamTwo.setPrefix(ChatListener.stringToColor(teamTwoColor)+"");

@@ -1,4 +1,4 @@
-package cl.eilers.tatanpoker.map;
+package cl.eilers.tatanpoker09.map;
 
 import java.io.File; 
 import java.io.IOException;
@@ -9,6 +9,7 @@ import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
 
 import cl.eilers.tatanpoker09.utils.FileUtils;
+import cl.eilers.tatanpoker09.utils.ScoreboardUtils;
 
 public class MapLoader {
 	
@@ -48,7 +49,7 @@ public class MapLoader {
 		//Unloads last played map.
 		deleteWorld(lastMap.getName());
 		if(mapXML.exists()){
-			cl.eilers.tatanpoker.map.ScoreboardUtil.initScoreboard(dest.getName());
+			ScoreboardUtils.initScoreboard(dest.getName());
 		}
 	}
 

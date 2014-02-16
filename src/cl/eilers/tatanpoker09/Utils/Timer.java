@@ -5,7 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import cl.eilers.tatanpoker.map.MapLoader;
+import cl.eilers.tatanpoker09.map.MapLoader;
 import cl.eilers.tatanpoker09.Scrimmage;
 
 public class Timer extends BukkitRunnable {

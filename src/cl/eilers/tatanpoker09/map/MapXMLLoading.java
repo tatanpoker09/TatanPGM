@@ -1,4 +1,4 @@
-package cl.eilers.tatanpoker.map;
+package cl.eilers.tatanpoker09.map;
 
 import java.io.File;
 
