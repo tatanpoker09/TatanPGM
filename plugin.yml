@@ -15,3 +15,5 @@ commands:
     description: Cancels the countdown.
   lobby:
     description: Teleports you to the lobby.
+  join:
+    description: Joins you to a team.
