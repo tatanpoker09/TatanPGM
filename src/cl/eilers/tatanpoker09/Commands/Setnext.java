@@ -7,6 +7,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import cl.eilers.tatanpoker09.Scrimmage;
+import cl.eilers.tatanpoker09.utils.CodingUtils;
 
 public class Setnext implements CommandExecutor {
 	private Scrimmage plugin;
@@ -19,20 +20,9 @@ public class Setnext implements CommandExecutor {
 			sender.sendMessage("Not enough arguments!");
 			return false;
 		}
-		File mapDirExists = new File("maps");
-		String mapName = "";
-		//Checks if mapDirectory exists.
-		if(mapDirExists.exists()){
-			System.out.println("Found maps Directory!");
-			int i = 0;
-			while(i < args.length) {
-				mapName += " " + args[i];
-				i++;
-			}
-			mapName = mapName.substring(1);
+		String mapName = CodingUtils.StringConcatenating(args);
 			File src = new File("maps/"+mapName);
 			if(src.exists()){
-				//Se necesita if para ver si existe
 				sender.sendMessage(mapName);
 				plugin.getConfig().set("TatanPGM.NextMap", mapName);
 				plugin.saveConfig();
@@ -40,8 +30,7 @@ public class Setnext implements CommandExecutor {
 			} else {
 				sender.sendMessage("Couldn't find map by the name: '"+ mapName+"'");
 			}
-		}
 		return true;
 	}
-
 }
+

@@ -1,6 +1,6 @@
 package cl.eilers.tatanpoker09.utils;
 
-import java.io.File;
+import java.io.File; 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileUtils {
-	
+
 	public static List<File> getFiles(File folder) {
 		if (!folder.exists())
 			folder.mkdirs();
@@ -25,7 +25,7 @@ public class FileUtils {
 		}
 		return list;
 	}
-	
+
 	public static void delete(File dir) {
 		if (dir.isDirectory()) {
 			String[] children = dir.list();
@@ -35,12 +35,12 @@ public class FileUtils {
 		}
 		dir.delete();
 	}
-	
+
 	public static void move(File from, File to) throws IOException {
 		copyFolder(from, to);
 		delete(from);
 	}
-	
+
 	public static void copy(InputStream in, File file) {
 		try {
 			OutputStream out = new FileOutputStream(file);
@@ -55,7 +55,7 @@ public class FileUtils {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void copy(File src, File dest) throws IOException {
 		if (!src.exists()) {
 			throw new IOException("Can not find source: " + src.getAbsolutePath()+".");
@@ -96,7 +96,7 @@ public class FileUtils {
 			}
 		}
 	}
-	
+
 	@SuppressWarnings("resource")
 	public static void copyFolder(File src, File dest) throws IOException {
 		if (src.isDirectory()) {
@@ -117,7 +117,7 @@ public class FileUtils {
 				byte[] buffer = new byte[1024];
 				int length;
 				while ((length = in.read(buffer)) > 0) {
-						out.write(buffer, 0, length);
+					out.write(buffer, 0, length);
 				}
 				out.close();
 			} catch(Exception e) {
@@ -125,5 +125,5 @@ public class FileUtils {
 			}
 		}
 	}
-	
+
 }

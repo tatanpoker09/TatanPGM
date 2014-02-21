@@ -21,8 +21,10 @@ import cl.eilers.tatanpoker09.commands.Join;
 import cl.eilers.tatanpoker09.commands.Lobby;
 import cl.eilers.tatanpoker09.commands.SetServer;
 import cl.eilers.tatanpoker09.commands.Setnext;
+import cl.eilers.tatanpoker09.listeners.BlockListener;
 import cl.eilers.tatanpoker09.listeners.ChatListener;
 import cl.eilers.tatanpoker09.listeners.CommandsListener;
+import cl.eilers.tatanpoker09.utils.ScoreboardUtils;
 import cl.eilers.tatanpoker09.utils.Timer;
 
 
@@ -46,13 +48,22 @@ public final class Scrimmage extends JavaPlugin implements Listener {
 		//Config Thingies
 		createYML(DontModify);
 		this.getConfig().addDefault("TatanPGM.serverName", "A TatanPGM Server!");
-		loadConfiguration();
-		this.saveDefaultConfig();
 		//Listeners
 		PluginManager pm = Bukkit.getServer().getPluginManager();
 		pm.registerEvents(this, this);
-		pm.registerEvents(new ChatListener(), this);
+		pm.registerEvents(new BlockListener(), this);
 		pm.registerEvents(new CommandsListener(), this);
+		pm.registerEvents(new ChatListener(), this);
+		
+		//Registers main teams.
+		if(ScoreboardUtils.mainTeamsExist()==false){
+		Bukkit.getServer().getScoreboardManager().getMainScoreboard().registerNewTeam("FirstTeam");
+		Bukkit.getServer().getScoreboardManager().getMainScoreboard().registerNewTeam("SecondTeam");
+		Bukkit.getServer().getScoreboardManager().getMainScoreboard().registerNewTeam("Observers");
+		getConfig().set("TatanPGM.HasCreatedTeams", true);
+		loadConfiguration();
+		this.saveDefaultConfig();
+		}	
 	}
 	@Override
 	public void onDisable(){
@@ -77,8 +88,11 @@ public final class Scrimmage extends JavaPlugin implements Listener {
 	@EventHandler //JoinMessage, also teleports the player to the spawn.
 	public void onJoin(PlayerJoinEvent event){
 		System.out.println("OnJoin Has been triggered!");
-		World spawn = new WorldCreator("spawn").createWorld();
+		World spawn = new WorldCreator(Bukkit.getServer().getWorlds().get(0).getName()).createWorld();
 		event.getPlayer().teleport(spawn.getSpawnLocation());
+		if(ScoreboardUtils.teamExists("Observers")){
+		ScoreboardUtils.joinTeam(event.getPlayer(), "Observers");
+		}
 		String serverName = getConfig().getString("TatanPGM.serverName");
 		event.getPlayer().sendMessage(ChatColor.BLUE+"########################");
 		event.getPlayer().sendMessage(ChatColor.RED+"Welcome to " + serverName);
