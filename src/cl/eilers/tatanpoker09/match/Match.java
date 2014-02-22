@@ -1,28 +1,25 @@
 package cl.eilers.tatanpoker09.match;
 
 public class Match {
-	public String getMatchStatus(){
-		if(hasEnded()){
+	public static boolean hasStarted = false;
+	public static boolean hasEnded = false;
+	public static String getMatchStatus(){
+		if(hasEnded){
 			return "END";
-		}else if(hasStarted()==false){
+		}else if(hasStarted==false){
 			return "PREMATCH";
-		}else if(hasStarted()){
+		}else if(hasStarted){
 			return "PLAYING";
 		}
 		return "ERROR";
 	}
 	
-	public boolean hasStarted(){
-		return true;
+	public static void endMatch(){
+		hasStarted = false;
+		hasEnded = true;
 	}
-	public boolean hasEnded(){
-		return true;
-	}
-	
-	public void endMatch(){
-		
-	}
-	public void startMatch(){
-		
+	public static void startMatch(){
+		hasEnded = false;
+		hasStarted = true;
 	}
 }

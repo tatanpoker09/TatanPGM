@@ -77,7 +77,7 @@ public class ScoreboardUtils {
 		Scrimmage.teamInfo = teamInfo;
 		//String teamOneColor = teamInfo[1][0];
 		//String teamTwoColor = teamInfo[1][0];
-		String teamOneName = teamInfo[1][2];
+		//String teamOneName = teamInfo[1][2];
 		//String teamTwoName = teamInfo[2][2];
 
 		//Initializing Scoreboard.
@@ -87,7 +87,7 @@ public class ScoreboardUtils {
 		mainScoreboard.getTeam("SecondTeam").setPrefix(""+ChatColor.DARK_RED);
 		mainScoreboard.getTeam("Observers").setPrefix(""+ChatColor.AQUA);
 		
-		mainScoreboard.getTeam("FirstTeam").setDisplayName(teamOneName);
+		mainScoreboard.getTeam("FirstTeam").setDisplayName("Blue Team");
 		mainScoreboard.getTeam("SecondTeam").setDisplayName("Red Team");
 		
 		Objective mainObj = objectivesBoard.registerNewObjective("Objectives", "dummy");

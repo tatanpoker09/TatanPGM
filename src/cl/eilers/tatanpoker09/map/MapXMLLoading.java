@@ -53,11 +53,11 @@ public class MapXMLLoading {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		String[] objectivesString = null;
 		return objectivesString;
 	}*/
-	
+
 	public static ArrayList<String> getObjectivesType(String nextMap){
 		ArrayList<String> objType = new ArrayList<String>();
 		Document mapXML = null;
@@ -67,7 +67,7 @@ public class MapXMLLoading {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		//GET IN HERE NUMBER OF OBJ PER TYPE.
 		NodeList objsNodeList = mapXML.getElementsByTagName("cores");
 		if(objsNodeList.getLength()>1){
@@ -104,8 +104,8 @@ public class MapXMLLoading {
 						teamInfo[temp][1]= maxPlayers;
 						teamInfo[temp][2]= teamName;
 					}
-				}	
-			}
+				}
+			}	
 		} catch (DOMException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

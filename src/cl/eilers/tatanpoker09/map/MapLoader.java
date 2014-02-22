@@ -8,6 +8,7 @@ import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
 
+import cl.eilers.tatanpoker09.match.Match;
 import cl.eilers.tatanpoker09.utils.FileUtils;
 import cl.eilers.tatanpoker09.utils.ScoreboardUtils;
 
@@ -43,8 +44,9 @@ public class MapLoader {
 		World nextWorld = new WorldCreator(dest.getName()).createWorld();
 		nextWorld.setGameRuleValue("doMobSpawning", "false");
 		for(Player playersOnWorld : Bukkit.getOnlinePlayers()){
-			playersOnWorld.teleport(nextWorld.getSpawnLocation());			
+			playersOnWorld.teleport(nextWorld.getSpawnLocation());
 		}
+		Match.hasEnded=false;
 		File mapXML = new File("maps/"+nextMap+"/map.xml");
 		//Unloads last played map.
 		deleteWorld(lastMap.getName());

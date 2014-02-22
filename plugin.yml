@@ -17,3 +17,7 @@ commands:
     description: Teleports you to the lobby.
   join:
     description: Joins you to a team.
+  start:
+    description: Starts the match.
+  end:
+    description: Ends the match.
