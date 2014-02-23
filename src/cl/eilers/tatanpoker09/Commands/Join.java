@@ -23,10 +23,8 @@ public class Join implements CommandExecutor{
 			Team teamTwo = Bukkit.getServer().getScoreboardManager().getMainScoreboard().getTeam("SecondTeam");
 			if(teamOne.getPlayers().size()>teamTwo.getPlayers().size()){
 				ScoreboardUtils.joinTeam((Player)sender, teamTwo.getName());
-				sender.sendMessage("You joined the " + teamTwo.getDisplayName());
 			} else {
 				ScoreboardUtils.joinTeam((Player)sender, teamOne.getName());
-				sender.sendMessage("You joined the " + teamOne.getDisplayName());
 			}
 			
 		}

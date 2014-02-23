@@ -36,7 +36,6 @@ public final class Scrimmage extends JavaPlugin implements Listener {
 	private File DontModify = new File("plugins/TatanPGM/DontModify.yml");
 	
 	public static List<Timer> tList = new ArrayList<Timer>();
-	public static String[][] teamInfo;
 	
 	@Override
 	public void onEnable(){

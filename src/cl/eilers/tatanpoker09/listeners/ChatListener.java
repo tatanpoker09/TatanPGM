@@ -40,4 +40,47 @@ public class ChatListener implements Listener{
 		}
 		event.setCancelled(true);
 	}
+
+
+	public static ChatColor stringToColor(String str){
+		if(!str.equals(null)){
+			switch(str){
+			case("black"):
+				return ChatColor.BLACK;
+			case("dark blue"):
+				return ChatColor.DARK_BLUE;
+			case("blue"):
+				return ChatColor.BLUE;
+			case("dark green"):
+				return ChatColor.DARK_GREEN;
+			case("dark aqua"):
+				return ChatColor.DARK_AQUA;
+			case("dark red"):
+				return ChatColor.DARK_RED;
+			case("dark purple"):
+				return ChatColor.DARK_PURPLE;
+			case("gold"):
+				return ChatColor.GOLD;
+			case("gray"):
+				return ChatColor.GRAY;
+			case("dark gray"):
+				return ChatColor.DARK_GRAY;
+			case("green"):
+				return ChatColor.GREEN;
+			case("aqua"):
+				return ChatColor.AQUA;
+			case("red"):
+				return ChatColor.RED;
+			case("light purple"):
+				return ChatColor.LIGHT_PURPLE;
+			case("yellow"):
+				return ChatColor.YELLOW;
+			case("white"):
+				return ChatColor.WHITE;
+			default:
+				return ChatColor.AQUA;
+			}
+		}
+		return ChatColor.AQUA;
+	}
 }

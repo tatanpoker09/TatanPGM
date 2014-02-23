@@ -11,7 +11,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 
-import cl.eilers.tatanpoker09.Scrimmage;
+import cl.eilers.tatanpoker09.listeners.ChatListener;
 import cl.eilers.tatanpoker09.map.MapXMLLoading;
 
 public class ScoreboardUtils {
@@ -19,9 +19,7 @@ public class ScoreboardUtils {
 	public static Scoreboard objectivesBoard;
 	
 	public static Scoreboard mainScoreboard = scoreBManager.getMainScoreboard();
-	public static ChatColor getTeamColor(){
-		return ChatColor.AQUA;
-	}
+	
 	public static boolean mainTeamsExist(){
 		if(Bukkit.getPluginManager().getPlugin("TatanPGM").getConfig().getBoolean("TatanPGM.HasCreatedTeams")){
 			return true;
@@ -41,14 +39,8 @@ public class ScoreboardUtils {
 	}
 
 
-	public static String getTeamName(Team team, String nextMap){
-		String teamName = null;
-		String[][] teamInfo = MapXMLLoading.getTeamInfo(nextMap);
-		if(team.getName().equals("FirstTeam")){
-			teamName = teamInfo[0][2];
-		} else {
-			teamName = teamInfo[1][2];
-		}
+	public static String getTeamName(Team team){
+		String teamName = team.getDisplayName();
 		return teamName;
 	}
 	public static void setTeamName(Team teamNumber, String name){
@@ -57,12 +49,20 @@ public class ScoreboardUtils {
 
 	public static void joinTeam(Player playerToJoin, String teamToJoin){
 		if(teamExists(teamToJoin)){
-			if(StringUtils.containsIgnoreCase(Bukkit.getScoreboardManager().getMainScoreboard().getTeam("FirstTeam").getDisplayName(), teamToJoin)){
-				Bukkit.getScoreboardManager().getMainScoreboard().getTeam("FirstTeam").addPlayer(playerToJoin);
-			}else if(StringUtils.containsIgnoreCase(Bukkit.getScoreboardManager().getMainScoreboard().getTeam("SecondTeam").getDisplayName(), teamToJoin)){
-				Bukkit.getScoreboardManager().getMainScoreboard().getTeam("SecondTeam").addPlayer(playerToJoin);
+			Team firstTeam = Bukkit.getScoreboardManager().getMainScoreboard().getTeam("FirstTeam");
+			Team secondTeam = Bukkit.getScoreboardManager().getMainScoreboard().getTeam("SecondTeam");
+			Team observers = Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Observers");
+			if(StringUtils.containsIgnoreCase(firstTeam.getDisplayName(), teamToJoin)){
+				firstTeam.addPlayer(playerToJoin);
+				playerToJoin.sendMessage("You joined the "+getTeamName(firstTeam));
+				
+			}else if(StringUtils.containsIgnoreCase(secondTeam.getDisplayName(), teamToJoin)){	
+				secondTeam.addPlayer(playerToJoin);
+				playerToJoin.sendMessage("You joined the "+getTeamName(secondTeam));
+			
 			}else if((StringUtils.containsIgnoreCase(Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Observers").getDisplayName(), teamToJoin))){
-				Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Observers").addPlayer(playerToJoin);
+				observers.addPlayer(playerToJoin);
+				playerToJoin.sendMessage("You joined the "+ChatColor.AQUA+getTeamName(observers));
 			} else {
 				playerToJoin.sendMessage("An unexpected error has ocurred.");
 			}
@@ -74,26 +74,27 @@ public class ScoreboardUtils {
 	public static void initScoreboard(String nextMapFolder){
 		//Getting info from XML
 		String[][] teamInfo = MapXMLLoading.getTeamInfo(nextMapFolder);
-		Scrimmage.teamInfo = teamInfo;
-		//String teamOneColor = teamInfo[1][0];
-		//String teamTwoColor = teamInfo[1][0];
-		//String teamOneName = teamInfo[1][2];
-		//String teamTwoName = teamInfo[2][2];
+		System.out.println(teamInfo.toString());
+		String teamOneColor = teamInfo[0][0];
+		String teamTwoColor = teamInfo[1][0];
+		//int teamOneMax = Integer.parseInt(teamInfo[0][1]);
+		//int teamTwoMax = Integer.parseInt(teamInfo[0][1]);
+		String teamOneName = teamInfo[0][2];
+		String teamTwoName = teamInfo[1][2];
 
 		//Initializing Scoreboard.
 		Scoreboard objectivesBoard = scoreBManager.getNewScoreboard();
 		//Teams
-		mainScoreboard.getTeam("FirstTeam").setPrefix(""+ChatColor.BLUE);
-		mainScoreboard.getTeam("SecondTeam").setPrefix(""+ChatColor.DARK_RED);
+		mainScoreboard.getTeam("FirstTeam").setPrefix(""+ChatListener.stringToColor(teamOneColor));
+		mainScoreboard.getTeam("SecondTeam").setPrefix(""+ChatListener.stringToColor(teamTwoColor));
 		mainScoreboard.getTeam("Observers").setPrefix(""+ChatColor.AQUA);
 		
-		mainScoreboard.getTeam("FirstTeam").setDisplayName("Blue Team");
-		mainScoreboard.getTeam("SecondTeam").setDisplayName("Red Team");
+		mainScoreboard.getTeam("FirstTeam").setDisplayName(ChatListener.stringToColor(teamOneColor)+teamOneName);
+		mainScoreboard.getTeam("SecondTeam").setDisplayName(ChatListener.stringToColor(teamTwoColor)+teamTwoName);
 		
 		Objective mainObj = objectivesBoard.registerNewObjective("Objectives", "dummy");
 		mainObj.setDisplaySlot(DisplaySlot.SIDEBAR);
-		mainObj.setDisplayName(ChatColor.YELLOW+"Objectives");
-
+		mainObj.setDisplayName(ChatColor.GOLD+"Objectives");
 		Score score = mainObj.getScore(Bukkit.getOfflinePlayer(mainScoreboard.getTeam("FirstTeam").getDisplayName()));
 		score.setScore(5);
 		score = mainObj.getScore(Bukkit.getOfflinePlayer(mainScoreboard.getTeam("SecondTeam").getDisplayName()));

@@ -1,6 +1,6 @@
 package cl.eilers.tatanpoker09.map;
 
-import java.io.File;
+import java.io.File; 
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -45,18 +45,6 @@ public class MapXMLLoading {
 	public static String[][] getTeamInfo(String nextMap){
 		return teamXML(nextMap);
 	}
-	/*public static String[] getObjectives(String nextMap){
-		Document xml = null;
-		try {
-			xml = LoadXML(nextMap);
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		String[] objectivesString = null;
-		return objectivesString;
-	}*/
 
 	public static ArrayList<String> getObjectivesType(String nextMap){
 		ArrayList<String> objType = new ArrayList<String>();
@@ -94,16 +82,17 @@ public class MapXMLLoading {
 				NodeList teamsNode = doc.getElementsByTagName("teams");
 				for (int temp = 0; temp < teamsNode.getLength(); temp++) {
 					Node nNode = teamsNode.item(temp);
-					if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-						Element team = (Element)nNode;
-						teamColor = team.getAttribute("color");
-						maxPlayers = team.getAttribute("max");
-						NodeList nameNode = team.getElementsByTagName("team");
-						teamName = nameNode.item(temp).getTextContent();
-						teamInfo[temp][0]= teamColor;
-						teamInfo[temp][1]= maxPlayers;
-						teamInfo[temp][2]= teamName;
-					}
+					Element team = (Element)nNode;
+					NodeList nameNode = team.getElementsByTagName("team");
+					teamColor = "Color fix?";
+					maxPlayers = nameNode.item(1).getTextContent();
+					teamName = nameNode.item(0).getAttributes().getNamedItem("color").getNodeValue();
+					teamInfo[0][0]=nameNode.item(0).getAttributes().getNamedItem("color").getNodeValue(); 
+					teamInfo[1][0]=nameNode.item(1).getAttributes().getNamedItem("color").getNodeValue(); 
+					teamInfo[0][1]=nameNode.item(0).getAttributes().getNamedItem("max").getNodeValue();;
+					teamInfo[1][1]=nameNode.item(1).getAttributes().getNamedItem("max").getNodeValue();;
+					teamInfo[0][2]= nameNode.item(0).getTextContent();
+					teamInfo[1][2]=nameNode.item(1).getTextContent();
 				}
 			}	
 		} catch (DOMException e) {
