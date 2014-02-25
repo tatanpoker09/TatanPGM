@@ -1,13 +1,18 @@
 package cl.eilers.tatanpoker09.map;
 
-import java.io.File; 
+import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
+import org.bukkit.scoreboard.Team;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -15,14 +20,13 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import cl.eilers.tatanpoker09.utils.ScoreboardUtils;
+
 public class MapXMLLoading {
-	static String maxPlayers;
-	static String teamColor;
-	static String teamName;
-	static String[][] teamInfo = new String[2][3];
+	static String[][] teamInfo = new String[ScoreboardUtils.mainBoard.getTeams().size()-1][3];
 
 	public static Document LoadXML(String nextMap) throws ParserConfigurationException{
-		File mapXML = new File(nextMap+"/map.xml");
+		File mapXML = new File("maps/"+Bukkit.getPluginManager().getPlugin("TatanPGM").getConfig().getString("TatanPGM.NextMap")+"/map.xml");
 		Document doc = null;
 		if(mapXML.exists()){
 			System.out.println("Found XML");
@@ -41,39 +45,49 @@ public class MapXMLLoading {
 		return doc;
 	}
 
-
-	public static String[][] getTeamInfo(String nextMap){
-		return teamXML(nextMap);
-	}
-
-	public static ArrayList<String> getObjectivesType(String nextMap){
-		ArrayList<String> objType = new ArrayList<String>();
-		Document mapXML = null;
+	public static String[] getObjectiveTypes(String nextMap){
+		String[] objectiveTypes = new String[3]; 
 		try {
-			mapXML = LoadXML(nextMap);
+			int n = 0;
+			int possibleError = 0;
+			NodeList objectives;
+			Document mapXML = LoadXML(nextMap);
+			objectives = mapXML.getElementsByTagName("cores");
+			if(objectives.getLength()>0){
+				objectiveTypes[n] = "cores";
+				n++;
+			} else {
+				possibleError++;
+			}
+			objectives = mapXML.getElementsByTagName("wools");
+			if(objectives.getLength()>0){
+				objectiveTypes[n] = "wools";
+				n++;
+			} else {
+				possibleError++;
+			}
+			objectives = mapXML.getElementsByTagName("destroyables");
+			if(objectives.getLength()>0){
+				objectiveTypes[n] = "destroyables";
+			} else {
+				possibleError++;
+			}
+			if(possibleError >= 3){
+				Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.DARK_RED+"WE COULDN'T FIND ANY OBJECTIVES. ASSUMING IT IS A TDM");
+			}
+
 		} catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		//GET IN HERE NUMBER OF OBJ PER TYPE.
-		NodeList objsNodeList = mapXML.getElementsByTagName("cores");
-		if(objsNodeList.getLength()>1){
-			objType.add("cores" + objsNodeList.getLength());
-		}
-		objsNodeList = mapXML.getElementsByTagName("wools");
-		if(objsNodeList.getLength()<1){
-			objType.add("wools" + objsNodeList.getLength());
-		}
-		objsNodeList = mapXML.getElementsByTagName("destroyables");
-		if(objsNodeList.getLength()<1){
-			objType.add("destroyables" + objsNodeList.getLength());
-		} 
-		return objType;
+		return objectiveTypes;
 	}
 
 
 
+	public static String[][] getTeamInfo(String nextMap){
+		return teamXML(nextMap);
+	}
 
 	public static String[][] teamXML(String nextMap){
 		try {
@@ -81,18 +95,16 @@ public class MapXMLLoading {
 				Document doc = LoadXML(nextMap);
 				NodeList teamsNode = doc.getElementsByTagName("teams");
 				for (int temp = 0; temp < teamsNode.getLength(); temp++) {
+					int item = 0;
 					Node nNode = teamsNode.item(temp);
 					Element team = (Element)nNode;
 					NodeList nameNode = team.getElementsByTagName("team");
-					teamColor = "Color fix?";
-					maxPlayers = nameNode.item(1).getTextContent();
-					teamName = nameNode.item(0).getAttributes().getNamedItem("color").getNodeValue();
-					teamInfo[0][0]=nameNode.item(0).getAttributes().getNamedItem("color").getNodeValue(); 
-					teamInfo[1][0]=nameNode.item(1).getAttributes().getNamedItem("color").getNodeValue(); 
-					teamInfo[0][1]=nameNode.item(0).getAttributes().getNamedItem("max").getNodeValue();;
-					teamInfo[1][1]=nameNode.item(1).getAttributes().getNamedItem("max").getNodeValue();;
-					teamInfo[0][2]= nameNode.item(0).getTextContent();
-					teamInfo[1][2]=nameNode.item(1).getTextContent();
+					while(item<ScoreboardUtils.mainBoard.getTeams().size()-1){
+					teamInfo[item][0]=nameNode.item(item).getAttributes().getNamedItem("color").getNodeValue();  
+					teamInfo[item][1]=nameNode.item(item).getAttributes().getNamedItem("max").getNodeValue();
+					teamInfo[item][2]= nameNode.item(item).getTextContent();
+					item++;
+					}
 				}
 			}	
 		} catch (DOMException e) {
@@ -103,5 +115,64 @@ public class MapXMLLoading {
 			e.printStackTrace();
 		}
 		return teamInfo;
+	}
+	public static void spawnTeleporting(){
+		for(Team team :  ScoreboardUtils.mainBoard.getTeams()){
+			Location spawnLocation = getSpawnLocation(team);
+			for(OfflinePlayer player : team.getPlayers()){
+				if(player.getPlayer()!=null){
+					if(spawnLocation!=null){
+						player.getPlayer().setBedSpawnLocation(spawnLocation);
+						player.getPlayer().teleport(spawnLocation);
+					} else{
+					}
+				}
+			}
+		}
+		
+	}
+	public static Location getLocationFromString(String location, World world){
+		String[] locationStringArray = location.split(",");
+		double[] parsed = new double[3];
+		for (int a = 0; a < 3; a++) {
+			parsed[a] = Double.parseDouble(locationStringArray[a]);
+		}
+
+		return new Location (world ,parsed[0], parsed[1], parsed[2]);
+	}
+
+	public static Location getSpawnLocation(Team team) {
+		NodeList spawnNode = null;
+		World scrimmageWorld = Bukkit.getServer().getWorld(Bukkit.getPluginManager().getPlugin("TatanPGM").getConfig().getString("TatanPGM.CurrentMap"));
+		Location defaultLocation = null;
+		try {
+			Document mapXML = LoadXML(Bukkit.getPluginManager().getPlugin("TatanPGM").getConfig().getString("TatanPGM.NextMap"));
+			NodeList spawnsNode = mapXML.getElementsByTagName("spawns");
+			Node nNode = spawnsNode.item(0);
+			Element spawn = (Element)nNode;
+			if(team.getName().equalsIgnoreCase("Observers")){
+			spawnNode = spawn.getElementsByTagName("default");
+			} else {
+				spawnNode = spawn.getElementsByTagName("spawn");
+			}
+			int n = 0;
+			if(team.getName().equals("FirstTeam")){
+				n = 0;
+			} else if(team.getName().equals("SecondTeam")){
+				n = 1;
+			} else {
+				n = 10;
+			}
+			if(n < 9){
+			String defaultSpawn = spawnNode.item(n).getChildNodes().item(0).getAttributes().getNamedItem("base").getNodeValue();
+			Float yaw = Float.parseFloat(spawnNode.item(n).getAttributes().getNamedItem("yaw").getNodeValue());
+			defaultLocation = getLocationFromString(defaultSpawn, scrimmageWorld);
+			defaultLocation.setYaw(yaw);
+			}
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return defaultLocation;
 	}
 }

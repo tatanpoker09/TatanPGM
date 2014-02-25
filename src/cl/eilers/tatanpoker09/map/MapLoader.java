@@ -39,7 +39,8 @@ public class MapLoader {
 			e.printStackTrace();
 		}
 
-
+		Bukkit.getPluginManager().getPlugin("TatanPGM").getConfig().set("TatanPGM.CurrentMap", dest.getName());
+		Bukkit.getPluginManager().getPlugin("TatanPGM").saveConfig();
 
 		World nextWorld = new WorldCreator(dest.getName()).createWorld();
 		nextWorld.setGameRuleValue("doMobSpawning", "false");

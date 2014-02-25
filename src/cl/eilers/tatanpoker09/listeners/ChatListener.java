@@ -7,6 +7,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+import cl.eilers.tatanpoker09.utils.ScoreboardUtils;
+
 
 public class ChatListener implements Listener{
 	String team;
@@ -33,7 +35,7 @@ public class ChatListener implements Listener{
 		break;
 		}
 		for(Player playersOnWorld : event.getPlayer().getWorld().getPlayers()){
-			if(Bukkit.getServer().getScoreboardManager().getMainScoreboard().getPlayerTeam(playersOnWorld).equals(Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(event.getPlayer()))){
+			if(ScoreboardUtils.mainBoard.getPlayerTeam(playersOnWorld).equals(ScoreboardUtils.mainBoard.getPlayerTeam(event.getPlayer()))){
 				playersOnWorld.sendMessage(color+team+event.getPlayer().getName()+ChatColor.WHITE+": "+ChatMessage);
 				System.out.println(color+team+event.getPlayer().getName()+ChatColor.WHITE+": "+ChatMessage);
 			}
@@ -43,7 +45,7 @@ public class ChatListener implements Listener{
 
 
 	public static ChatColor stringToColor(String str){
-		if(!str.equals(null)){
+		if(str!=null){
 			switch(str){
 			case("black"):
 				return ChatColor.BLACK;

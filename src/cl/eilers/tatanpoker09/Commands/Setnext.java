@@ -2,6 +2,7 @@ package cl.eilers.tatanpoker09.commands;
 
 import java.io.File;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -26,9 +27,9 @@ public class Setnext implements CommandExecutor {
 				sender.sendMessage(mapName);
 				plugin.getConfig().set("TatanPGM.NextMap", mapName);
 				plugin.saveConfig();
-				sender.sendMessage(plugin.getConfig().getString("TatanPGM.NextMap") + " Has been set for the next match!");
+				sender.sendMessage(ChatColor.GREEN+plugin.getConfig().getString("TatanPGM.NextMap") + " Has been set for the next match!");
 			} else {
-				sender.sendMessage("Couldn't find map by the name: '"+ mapName+"'");
+				sender.sendMessage(ChatColor.RED+"Couldn't find map by the name: '"+ mapName+"'");
 			}
 		return true;
 	}

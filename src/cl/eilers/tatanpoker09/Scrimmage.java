@@ -26,6 +26,8 @@ import cl.eilers.tatanpoker09.commands.Start;
 import cl.eilers.tatanpoker09.listeners.BlockListener;
 import cl.eilers.tatanpoker09.listeners.ChatListener;
 import cl.eilers.tatanpoker09.listeners.CommandsListener;
+import cl.eilers.tatanpoker09.listeners.DeathListener;
+import cl.eilers.tatanpoker09.listeners.InventoryListener;
 import cl.eilers.tatanpoker09.utils.ScoreboardUtils;
 import cl.eilers.tatanpoker09.utils.Timer;
 
@@ -58,12 +60,13 @@ public final class Scrimmage extends JavaPlugin implements Listener {
 		pm.registerEvents(new BlockListener(), this);
 		pm.registerEvents(new CommandsListener(), this);
 		pm.registerEvents(new ChatListener(), this);
-		
+		pm.registerEvents(new InventoryListener(), this);
+		pm.registerEvents(new DeathListener(), this);
 		//Registers main teams.
 		if(ScoreboardUtils.mainTeamsExist()==false){
-		Bukkit.getServer().getScoreboardManager().getMainScoreboard().registerNewTeam("FirstTeam");
-		Bukkit.getServer().getScoreboardManager().getMainScoreboard().registerNewTeam("SecondTeam");
-		Bukkit.getServer().getScoreboardManager().getMainScoreboard().registerNewTeam("Observers");
+		ScoreboardUtils.mainBoard.registerNewTeam("FirstTeam");
+		ScoreboardUtils.mainBoard.registerNewTeam("SecondTeam");
+		ScoreboardUtils.mainBoard.registerNewTeam("Observers");
 		getConfig().set("TatanPGM.HasCreatedTeams", true);
 		loadConfiguration();
 		this.saveDefaultConfig();
