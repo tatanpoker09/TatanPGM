@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 
 import cl.eilers.tatanpoker09.match.Match;
 import cl.eilers.tatanpoker09.utils.FileUtils;
-import cl.eilers.tatanpoker09.utils.ScoreboardUtils;
 
 public class MapLoader {
 	
@@ -52,7 +51,7 @@ public class MapLoader {
 		//Unloads last played map.
 		deleteWorld(lastMap.getName());
 		if(mapXML.exists()){
-			ScoreboardUtils.initScoreboard(dest.getName());
+			ScoreboardLoading.initScoreboard(dest.getName());
 		}
 	}
 

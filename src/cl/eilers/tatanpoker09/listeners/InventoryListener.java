@@ -15,12 +15,10 @@ public class InventoryListener implements Listener{
 		if(!Bukkit.getServer().getWorlds().get(0).equals(event.getPlayer().getWorld())){
 			if(Match.getMatchStatus().equals("PLAYING")){
 				if(Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(event.getPlayer()).getName().equals("Observers")){
-					event.setCancelled(true);
-					event.getPlayer().getInventory().clear(event.getPlayer().getInventory().getHeldItemSlot());
+					 event.getItemDrop().remove();
 				}
 			} else {
-				event.setCancelled(true);
-				event.getPlayer().getInventory().clear(event.getPlayer().getInventory().getHeldItemSlot());
+				event.getItemDrop().remove();
 			}
 		}
 	}

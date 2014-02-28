@@ -1,6 +1,6 @@
 package cl.eilers.tatanpoker09;
 
-import java.io.File; 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +15,21 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import cl.eilers.tatanpoker09.commands.*;
-import cl.eilers.tatanpoker09.listeners.*;
+import cl.eilers.tatanpoker09.commands.Cancel;
+import cl.eilers.tatanpoker09.commands.Cycle;
+import cl.eilers.tatanpoker09.commands.End;
+import cl.eilers.tatanpoker09.commands.G;
+import cl.eilers.tatanpoker09.commands.Join;
+import cl.eilers.tatanpoker09.commands.Lobby;
+import cl.eilers.tatanpoker09.commands.SetServer;
+import cl.eilers.tatanpoker09.commands.Setnext;
+import cl.eilers.tatanpoker09.commands.Start;
+import cl.eilers.tatanpoker09.listeners.BlockListener;
+import cl.eilers.tatanpoker09.listeners.ChatListener;
+import cl.eilers.tatanpoker09.listeners.CommandsListener;
+import cl.eilers.tatanpoker09.listeners.DeathListener;
+import cl.eilers.tatanpoker09.listeners.InventoryListener;
+import cl.eilers.tatanpoker09.utils.Handler_serverstop;
 import cl.eilers.tatanpoker09.utils.ScoreboardUtils;
 import cl.eilers.tatanpoker09.utils.Timer;
 
@@ -57,6 +70,12 @@ public final class Scrimmage extends JavaPlugin implements Listener {
 		getConfig().set("TatanPGM.HasCreatedTeams", true);
 		loadConfiguration();
 		this.saveDefaultConfig();
+		//Handler to run the Handler class on server shutdown.
+		try {
+            Runtime.getRuntime().addShutdownHook(new Handler_serverstop());
+        } catch (Exception e){
+            e.printStackTrace();
+        }
 		}	
 	}
 	@Override
