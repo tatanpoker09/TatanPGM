@@ -6,6 +6,7 @@ import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import cl.eilers.tatanpoker09.map.MapLoader;
+import cl.eilers.tatanpoker09.match.Match;
 import cl.eilers.tatanpoker09.Scrimmage;
 
 public class Timer extends BukkitRunnable {
@@ -36,6 +37,7 @@ public class Timer extends BukkitRunnable {
 			}
 		} else {
 			MapLoader.Load(plugin.getConfig().getString("TatanPGM.NextMap"), this.world);
+			Match.hasStarted=false;
 			this.cancel();
 		}
 	}

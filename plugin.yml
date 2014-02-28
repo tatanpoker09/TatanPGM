@@ -21,3 +21,5 @@ commands:
     description: Starts the match.
   end:
     description: Ends the match.
+  g:
+    description: Talks to general chat.

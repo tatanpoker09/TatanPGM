@@ -21,25 +21,37 @@ public class Match {
 		}
 		return "ERROR";
 	}
-	
+
 	public static void endMatch(){
-		hasStarted = false;
-		hasEnded = true;
-	}
-	public static void startMatch(){
-		if(Match.getMatchStatus().equals("PREMATCH")){
+		if(Match.getMatchStatus().equals("PLAYING")){
 			for(Team team : ScoreboardUtils.mainBoard.getTeams()){
 				if(!team.getName().equals("Observers")){
 					for(OfflinePlayer player : team.getPlayers()){
 						if(player.getPlayer()!=null){
-							player.getPlayer().setGameMode(GameMode.SURVIVAL);
+							player.getPlayer().setGameMode(GameMode.CREATIVE);
 						}
 					}
 				}
 			}
-		hasEnded = false;
-		hasStarted = true;
-		MapXMLLoading.spawnTeleporting();
+			hasStarted = true;
+			hasEnded = true;
 		}
 	}
-}
+		public static void startMatch(){
+			if(Match.getMatchStatus().equals("PREMATCH")){
+				for(Team team : ScoreboardUtils.mainBoard.getTeams()){
+					if(!team.getName().equals("Observers")){
+						for(OfflinePlayer player : team.getPlayers()){
+							if(player.getPlayer()!=null){
+								player.getPlayer().setGameMode(GameMode.SURVIVAL);
+								player.getPlayer().getInventory().clear();
+							}
+						}
+					}
+				}
+				hasEnded = false;
+				hasStarted = true;
+				MapXMLLoading.spawnTeleporting();
+			}
+		}
+	}

@@ -3,7 +3,7 @@ package cl.eilers.tatanpoker09.utils;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -14,6 +14,7 @@ import org.bukkit.scoreboard.Team;
 
 import cl.eilers.tatanpoker09.listeners.ChatListener;
 import cl.eilers.tatanpoker09.map.MapXMLLoading;
+import cl.eilers.tatanpoker09.match.Match;
 
 public class ScoreboardUtils {
 	public static ScoreboardManager scoreBManager = Bukkit.getScoreboardManager();
@@ -49,13 +50,24 @@ public class ScoreboardUtils {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	public static void joinTeam(Player playerToJoin, String teamToJoin){
 		if(teamExists(teamToJoin)){
 			for(Team team : mainBoard.getTeams()){
 				if(net.minecraft.util.org.apache.commons.lang3.StringUtils.startsWithIgnoreCase(ChatColor.stripColor(team.getDisplayName()), teamToJoin)){
-					team.addPlayer(playerToJoin);
-					playerToJoin.sendMessage("You joined the "+getTeamName(team));
-					break;
+					if(!ScoreboardUtils.mainBoard.getPlayerTeam(playerToJoin).getDisplayName().equals(team.getDisplayName())){
+						team.addPlayer(playerToJoin);
+						playerToJoin.sendMessage("You joined the "+getTeamName(team));
+						if(Match.getMatchStatus().equalsIgnoreCase("PLAYING")){
+							playerToJoin.setHealth(0);
+							if(team.getName().equals("Observers")){
+								playerToJoin.setGameMode(GameMode.CREATIVE);
+							} else {
+								playerToJoin.setGameMode(GameMode.SURVIVAL);
+							}
+						}
+						break;
+					}
 				}
 			}
 		} else {
@@ -91,13 +103,11 @@ public class ScoreboardUtils {
 		score.setScore(5);
 		score = mainObj.getScore(Bukkit.getOfflinePlayer(mainBoard.getTeam("SecondTeam").getDisplayName()));
 		score.setScore(4);
-		
-		Location defaultSpawn = MapXMLLoading.getSpawnLocation(mainBoard.getTeam("Observers"));
 		for(Player playersOnWorld : Bukkit.getWorld(nextMapFolder).getPlayers()){
 			playersOnWorld.setScoreboard(objectivesBoard);
 			mainBoard.getTeam("Observers").addPlayer(playersOnWorld);
 			playersOnWorld.getInventory().clear();
-			playersOnWorld.setBedSpawnLocation(defaultSpawn);
+			playersOnWorld.setGameMode(GameMode.CREATIVE);
 		}
 	}
 }

@@ -36,36 +36,37 @@ public class Cycle implements CommandExecutor {
 	}
 
 	private boolean runTimer(final CommandSender sender, Command cmd, String label, String[] args){
-		if(args.length<2){
-			if(CodingUtils.isNumeric(args[0])){
-				if(args[0].equals("0")){
-					MapLoader.Load(plugin.getConfig().getString("TatanPGM.NextMap"),((Player)sender).getWorld() );
-					if(!(sender instanceof Player)){
-						sender.sendMessage("You must be a player to cast this command.");
+		if(sender instanceof Player){
+			if(args.length<2){
+				if(CodingUtils.isNumeric(args[0])){
+					if(args[0].equals("0")){
+						MapLoader.Load(plugin.getConfig().getString("TatanPGM.NextMap"),((Player)sender).getWorld() );
+					} else if(Integer.parseInt(args[0])<0){
+						sender.sendMessage(ChatColor.RED+"You cannot cycle a match in less than zero seconds.");
+					} else {
+						countdown = Integer.parseInt(args[0]);
+						Scrimmage.tList.add(new Timer(this.plugin, countdown, ((Player)sender).getWorld()));
+						Scrimmage.tList.get(0).runTaskTimer(plugin, 0L, 20L);
+						plugin.getConfig().set("TatanPGM.CancelCountdown", false);
+						return true;
 					}
-				} else if(Integer.parseInt(args[0])<0){
-					sender.sendMessage(ChatColor.RED+"You cannot cycle a match in less than zero seconds.");
 				} else {
-					countdown = Integer.parseInt(args[0]);
-					Scrimmage.tList.add(new Timer(this.plugin, countdown, ((Player)sender).getWorld()));
-					Scrimmage.tList.get(0).runTaskTimer(plugin, 0L, 20L);
-					plugin.getConfig().set("TatanPGM.CancelCountdown", false);
-					return true;
+					sender.sendMessage(ChatColor.RED+"Number expected, string received instead.");
+					return false;
 				}
-			} else {
-				sender.sendMessage(ChatColor.RED+"Number expected, string received instead.");
+			} else if(args.length>1){
+				sender.sendMessage(ChatColor.RED+"Too many arguments.");
+				sender.sendMessage("/cycle [-f] [seconds] - defaults to 15 seconds");
 				return false;
+			} else if(args.length==0){
+				countdown = 15;
+				Scrimmage.tList.add(new Timer(this.plugin, countdown, ((Player)sender).getWorld()));
+				Scrimmage.tList.get(0).runTaskTimer(plugin, 0L, 20L);
+				return true;
 			}
-		} else if(args.length>1){
-			sender.sendMessage(ChatColor.RED+"Too many arguments.");
-			sender.sendMessage("/cycle [-f] [seconds] - defaults to 15 seconds");
-			return false;
-		} else if(args.length==0){
-			countdown = 15;
-			Scrimmage.tList.add(new Timer(this.plugin, countdown, ((Player)sender).getWorld()));
-			Scrimmage.tList.get(0).runTaskTimer(plugin, 0L, 20L);
-			return true;
+		} else {
+			sender.sendMessage("You must be a player to cast this command.");
 		}
-		return false;
+			return false;
+		}
 	}
-}

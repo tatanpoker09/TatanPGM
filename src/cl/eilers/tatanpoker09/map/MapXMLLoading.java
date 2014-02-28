@@ -24,7 +24,7 @@ import cl.eilers.tatanpoker09.utils.ScoreboardUtils;
 
 public class MapXMLLoading {
 	static String[][] teamInfo = new String[ScoreboardUtils.mainBoard.getTeams().size()-1][3];
-
+	
 	public static Document LoadXML(String nextMap) throws ParserConfigurationException{
 		File mapXML = new File("maps/"+Bukkit.getPluginManager().getPlugin("TatanPGM").getConfig().getString("TatanPGM.NextMap")+"/map.xml");
 		Document doc = null;
@@ -160,6 +160,8 @@ public class MapXMLLoading {
 				n = 0;
 			} else if(team.getName().equals("SecondTeam")){
 				n = 1;
+			} else if(team.getName().equals("Observers")) {
+				n = 0;
 			} else {
 				n = 10;
 			}
