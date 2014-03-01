@@ -8,6 +8,7 @@ import cl.eilers.tatanpoker09.map.MapLoader;
 public class Handler_serverstop extends Thread {
  
     public void run() {
+    	System.out.println("YESYESYESYEYS");
         for(World world : Bukkit.getServer().getWorlds()){
         		MapLoader.deleteWorld(world.getName());
         }

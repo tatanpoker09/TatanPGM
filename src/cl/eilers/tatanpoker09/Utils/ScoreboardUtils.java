@@ -57,7 +57,7 @@ public class ScoreboardUtils {
 				if(net.minecraft.util.org.apache.commons.lang3.StringUtils.startsWithIgnoreCase(ChatColor.stripColor(team.getDisplayName()), teamToJoin)){
 					if(!ScoreboardUtils.mainBoard.getPlayerTeam(playerToJoin).getDisplayName().equals(team.getDisplayName())){
 						team.addPlayer(playerToJoin);
-						playerToJoin.sendMessage("You joined the "+getTeamName(team));
+						playerToJoin.sendMessage(ChatColor.GRAY+"You joined the "+getTeamName(team));
 						if(Match.getMatchStatus().equalsIgnoreCase("PLAYING")){
 							playerToJoin.setHealth(0);
 							if(team.getName().equals("Observers")){
