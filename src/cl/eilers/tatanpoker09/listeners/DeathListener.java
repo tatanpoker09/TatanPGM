@@ -2,7 +2,7 @@ package cl.eilers.tatanpoker09.listeners;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 import cl.eilers.tatanpoker09.map.MapXMLLoading;
@@ -14,6 +14,6 @@ public class DeathListener implements Listener{
 		event.setRespawnLocation(MapXMLLoading.getSpawnLocation(ScoreboardUtils.mainBoard.getPlayerTeam(event.getPlayer())));
 	}
 	@EventHandler
-	public void onPlayerDeath(PlayerDeathEvent event){
+	public void onPlayerDeath(EntityDeathEvent event){
 	}
 }

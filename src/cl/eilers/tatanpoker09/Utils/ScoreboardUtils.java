@@ -3,6 +3,8 @@ package cl.eilers.tatanpoker09.utils;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -13,7 +15,10 @@ import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
+import cl.eilers.tatanpoker09.map.MapXMLLoading;
 import cl.eilers.tatanpoker09.match.Match;
 
 public class ScoreboardUtils {
@@ -77,10 +82,24 @@ public class ScoreboardUtils {
 	
 	public static void organizeScoreboard(ArrayList<String> args, Scoreboard board){
 		Collections.reverse(args);
-		System.out.println(args.size());
 		for(int amount = args.size();amount>0;amount--){
 			Score score = board.getObjective(DisplaySlot.SIDEBAR).getScore(Bukkit.getOfflinePlayer(args.get(amount-1)));
 			score.setScore(amount-1);
 		}
 	}
+	
+	public static String getMapName(String map){
+		String mapName = null;
+		try {
+			Document mapXML = MapXMLLoading.LoadXML(map);
+			NodeList name = mapXML.getElementsByTagName("name");
+			mapName = name.item(0).getTextContent();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return mapName;
+
+	}
+	
 }

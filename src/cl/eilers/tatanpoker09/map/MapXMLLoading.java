@@ -24,12 +24,11 @@ import cl.eilers.tatanpoker09.utils.ScoreboardUtils;
 
 public class MapXMLLoading {
 	static String[][] teamInfo = new String[ScoreboardUtils.mainBoard.getTeams().size()-1][3];
-	
+
 	public static Document LoadXML(String nextMap) throws ParserConfigurationException{
-		File mapXML = new File("maps/"+Bukkit.getPluginManager().getPlugin("TatanPGM").getConfig().getString("TatanPGM.NextMap")+"/map.xml");
+		File mapXML = new File("maps/"+nextMap+"/map.xml");
 		Document doc = null;
 		if(mapXML.exists()){
-			System.out.println("Found XML");
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			try {
@@ -100,10 +99,10 @@ public class MapXMLLoading {
 					Element team = (Element)nNode;
 					NodeList nameNode = team.getElementsByTagName("team");
 					while(item<ScoreboardUtils.mainBoard.getTeams().size()-1){
-					teamInfo[item][0]=nameNode.item(item).getAttributes().getNamedItem("color").getNodeValue();  
-					teamInfo[item][1]=nameNode.item(item).getAttributes().getNamedItem("max").getNodeValue();
-					teamInfo[item][2]= nameNode.item(item).getTextContent();
-					item++;
+						teamInfo[item][0]=nameNode.item(item).getAttributes().getNamedItem("color").getNodeValue();  
+						teamInfo[item][1]=nameNode.item(item).getAttributes().getNamedItem("max").getNodeValue();
+						teamInfo[item][2]= nameNode.item(item).getTextContent();
+						item++;
 					}
 				}
 			}	
@@ -129,7 +128,7 @@ public class MapXMLLoading {
 				}
 			}
 		}
-		
+
 	}
 	public static Location getLocationFromString(String location, World world){
 		String[] locationStringArray = location.split(",");
@@ -151,7 +150,7 @@ public class MapXMLLoading {
 			Node nNode = spawnsNode.item(0);
 			Element spawn = (Element)nNode;
 			if(team.getName().equalsIgnoreCase("Observers")){
-			spawnNode = spawn.getElementsByTagName("default");
+				spawnNode = spawn.getElementsByTagName("default");
 			} else {
 				spawnNode = spawn.getElementsByTagName("spawn");
 			}
@@ -166,10 +165,11 @@ public class MapXMLLoading {
 				n = 10;
 			}
 			if(n < 9){
-			String defaultSpawn = spawnNode.item(n).getChildNodes().item(0).getAttributes().getNamedItem("base").getNodeValue();
-			Float yaw = Float.parseFloat(spawnNode.item(n).getAttributes().getNamedItem("yaw").getNodeValue());
-			defaultLocation = getLocationFromString(defaultSpawn, scrimmageWorld);
-			defaultLocation.setYaw(yaw);
+				System.out.println(spawnNode.item(0).getChildNodes().item(0).getNodeName());
+				String defaultSpawn = spawnNode.item(n).getChildNodes().item(0).getAttributes().getNamedItem("base").getNodeValue();
+				Float yaw = Float.parseFloat(spawnNode.item(n).getAttributes().getNamedItem("yaw").getNodeValue());
+				defaultLocation = getLocationFromString(defaultSpawn, scrimmageWorld);
+				defaultLocation.setYaw(yaw);
 			}
 		} catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block

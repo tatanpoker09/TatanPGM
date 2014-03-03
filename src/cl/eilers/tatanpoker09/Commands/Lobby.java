@@ -11,9 +11,7 @@ import org.bukkit.entity.Player;
 public class Lobby implements CommandExecutor {
 
 	@Override
-	public boolean onCommand(CommandSender player, Command cmdName, String arg1,
-			String[] args) {
-		// TODO Auto-generated method stub
+	public boolean onCommand(CommandSender player, Command cmdName, String arg1, String[] args) {
 		World lobby = new WorldCreator(Bukkit.getWorlds().get(0).getName()).createWorld();
 		Player playerSender = (Player) player;
 		playerSender.teleport(lobby.getSpawnLocation());

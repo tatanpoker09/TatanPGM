@@ -15,20 +15,16 @@ import cl.eilers.tatanpoker09.utils.ScoreboardUtils;
 public class Join implements CommandExecutor{
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
-		Player playerSender = (Player)sender;
-		if(playerSender.getWorld().equals(Bukkit.getServer().getWorlds().get(0))){
-			if(args.length>0){
-				String teamName = CodingUtils.StringConcatenating(args);
-				ScoreboardUtils.joinTeam((Player)sender, teamName);
+		if(args.length>0){
+			String teamName = CodingUtils.StringConcatenating(args);
+			ScoreboardUtils.joinTeam((Player)sender, teamName);
+		} else {
+			Team teamOne = Bukkit.getServer().getScoreboardManager().getMainScoreboard().getTeam("FirstTeam");
+			Team teamTwo = Bukkit.getServer().getScoreboardManager().getMainScoreboard().getTeam("SecondTeam");
+			if(teamOne.getPlayers().size()>teamTwo.getPlayers().size()){
+				ScoreboardUtils.joinTeam((Player)sender, teamTwo.getDisplayName());
 			} else {
-				Team teamOne = Bukkit.getServer().getScoreboardManager().getMainScoreboard().getTeam("FirstTeam");
-				Team teamTwo = Bukkit.getServer().getScoreboardManager().getMainScoreboard().getTeam("SecondTeam");
-				if(teamOne.getPlayers().size()>teamTwo.getPlayers().size()){
-					ScoreboardUtils.joinTeam((Player)sender, teamTwo.getDisplayName());
-				} else {
-					ScoreboardUtils.joinTeam((Player)sender, teamOne.getDisplayName());
-				}
-
+				ScoreboardUtils.joinTeam((Player)sender, teamOne.getDisplayName());
 			}
 		}
 		return true;

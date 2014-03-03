@@ -21,6 +21,7 @@ import cl.eilers.tatanpoker09.commands.End;
 import cl.eilers.tatanpoker09.commands.G;
 import cl.eilers.tatanpoker09.commands.Join;
 import cl.eilers.tatanpoker09.commands.Lobby;
+import cl.eilers.tatanpoker09.commands.Maps;
 import cl.eilers.tatanpoker09.commands.SetServer;
 import cl.eilers.tatanpoker09.commands.Setnext;
 import cl.eilers.tatanpoker09.commands.Start;
@@ -30,27 +31,38 @@ import cl.eilers.tatanpoker09.listeners.CommandsListener;
 import cl.eilers.tatanpoker09.listeners.DeathListener;
 import cl.eilers.tatanpoker09.listeners.InventoryListener;
 import cl.eilers.tatanpoker09.utils.Handler_serverstop;
+import cl.eilers.tatanpoker09.utils.MapUtils;
 import cl.eilers.tatanpoker09.utils.ScoreboardUtils;
 import cl.eilers.tatanpoker09.utils.Timer;
 
 public final class Scrimmage extends JavaPlugin implements Listener {
+	/*TODO
+	 * Fix bug on /maps giving first line blank.
+	 * Work on objectives
+	 * Objectives into scoreboards.
+	 * Get tab with colors.
+	 * Fix /g
+	 * Work on regions
+	 */
+	
+	
 	private File DontModify = new File("plugins/TatanPGM/DontModify.yml");
-	
 	public static List<Timer> tList = new ArrayList<Timer>();
-	
+	public static List<String> mapNames = new ArrayList<String>();
 	@Override
 	public void onEnable(){
 		//Commands
 		getCommand("setserver").setExecutor(new SetServer());
-		getCommand("setnext").setExecutor(new Setnext(this));
-		getCommand("cycle").setExecutor(new Cycle(this));
+		getCommand("setnext").setExecutor(new Setnext());
+		getCommand("cycle").setExecutor(new Cycle());
 		getCommand("cancel").setExecutor(new Cancel(this));
 		getCommand("lobby").setExecutor(new Lobby());
 		getCommand("join").setExecutor(new Join());
 		getCommand("start").setExecutor(new Start());
 		getCommand("end").setExecutor(new End());
 		getCommand("g").setExecutor(new G());
-		
+		getCommand("maps").setExecutor(new Maps());
+
 		//Config Thingies
 		createYML(DontModify);
 		this.getConfig().addDefault("TatanPGM.serverName", "A TatanPGM Server!");
@@ -63,29 +75,30 @@ public final class Scrimmage extends JavaPlugin implements Listener {
 		pm.registerEvents(new InventoryListener(), this);
 		pm.registerEvents(new DeathListener(), this);
 		//Registers main teams.
+
 		if(ScoreboardUtils.mainTeamsExist()==false){
-		ScoreboardUtils.mainBoard.registerNewTeam("FirstTeam");
-		ScoreboardUtils.mainBoard.registerNewTeam("SecondTeam");
-		ScoreboardUtils.mainBoard.registerNewTeam("Observers");
-		getConfig().set("TatanPGM.HasCreatedTeams", true);
-		loadConfiguration();
-		this.saveDefaultConfig();
-		//Handler to run the Handler class on server shutdown.
-		try {
-            Runtime.getRuntime().addShutdownHook(new Handler_serverstop());
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-		}	
+			ScoreboardUtils.mainBoard.registerNewTeam("FirstTeam");
+			ScoreboardUtils.mainBoard.registerNewTeam("SecondTeam");
+			ScoreboardUtils.mainBoard.registerNewTeam("Observers");
+			getConfig().set("TatanPGM.HasCreatedTeams", true);
+			loadConfiguration();
+			this.saveDefaultConfig();
+			//Handler to run the Handler class on server shutdown.
+			try {
+				Runtime.getRuntime().addShutdownHook(new Handler_serverstop());
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+		}
 	}
 	@Override
 	public void onDisable(){
 	}
 	//More config Thingies
 	public void loadConfiguration(){
-	     getConfig().options().copyDefaults(true);
-	     saveConfig();
-	     reloadConfig();
+		getConfig().options().copyDefaults(true);
+		saveConfig();
+		reloadConfig();
 	}
 
 	public void createYML(File name){
@@ -97,14 +110,26 @@ public final class Scrimmage extends JavaPlugin implements Listener {
 			}
 		}
 	}
-	
+
+	public static void mapsLoad(){
+		for(File mapName : MapUtils.MapList()){
+			mapNames.clear();
+			File mapXML = new File("maps/"+mapName.getName()+"/map.xml");
+			if(mapXML.exists()){
+				mapNames.add(ScoreboardUtils.getMapName(mapName.getName()));
+				System.out.println(ScoreboardUtils.getMapName(mapName.getName()));
+			}
+		}
+	}
+
 	@EventHandler //JoinMessage, also teleports the player to the spawn.
 	public void onJoin(PlayerJoinEvent event){
 		System.out.println("OnJoin Has been triggered!");
 		World spawn = new WorldCreator(Bukkit.getServer().getWorlds().get(0).getName()).createWorld();
 		event.getPlayer().teleport(spawn.getSpawnLocation());
 		if(ScoreboardUtils.teamExists("Observers")){
-		ScoreboardUtils.joinTeam(event.getPlayer(), "Observers");
+			ScoreboardUtils.mainBoard.getTeam("Observers").addPlayer(event.getPlayer());;
+
 		}
 		String serverName = getConfig().getString("TatanPGM.serverName");
 		event.getPlayer().sendMessage(ChatColor.BLUE+"########################");

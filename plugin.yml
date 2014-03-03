@@ -23,3 +23,5 @@ commands:
     description: Ends the match.
   g:
     description: Talks to general chat.
+  maps:
+    description: Lists all Loaded maps.

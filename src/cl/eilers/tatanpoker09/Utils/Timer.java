@@ -3,22 +3,22 @@ package cl.eilers.tatanpoker09.utils;
 
 import org.bukkit.ChatColor;
 import org.bukkit.World;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import cl.eilers.tatanpoker09.map.MapLoader;
 import cl.eilers.tatanpoker09.match.Match;
-import cl.eilers.tatanpoker09.Scrimmage;
 
 public class Timer extends BukkitRunnable {
 
-	private final Scrimmage plugin;
+	private final Plugin plugin;
 
 	private int counter;
 	
 	private World world;
 	
-	public Timer(Scrimmage plugin, int counter, World world) {
-		this.plugin = plugin;
+	public Timer(Plugin plugin2, int counter, World world) {
+		this.plugin = plugin2;
 		if (counter < 1) {
 			throw new IllegalArgumentException("You must supply a number");
 		} else {

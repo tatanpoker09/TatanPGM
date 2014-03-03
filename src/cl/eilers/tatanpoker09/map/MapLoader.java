@@ -2,6 +2,7 @@ package cl.eilers.tatanpoker09.map;
 
 import java.io.File; 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -12,7 +13,7 @@ import cl.eilers.tatanpoker09.match.Match;
 import cl.eilers.tatanpoker09.utils.FileUtils;
 
 public class MapLoader {
-	
+	public static ArrayList<String> mapNames = null;
 	public static void Load(String nextMap, World lastMap){
 		System.out.println("MapLoading is starting");
 		boolean fileNotExist = true;
