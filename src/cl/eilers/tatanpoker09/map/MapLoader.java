@@ -1,6 +1,6 @@
 package cl.eilers.tatanpoker09.map;
 
-import java.io.File; 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -18,14 +18,14 @@ public class MapLoader {
 		System.out.println("MapLoading is starting");
 		boolean fileNotExist = true;
 		File src = new File("maps/"+nextMap);
-		File dest = new File(nextMap+"1");
+		File dest = new File("playing"+nextMap+"1");
 		if(dest.exists()){
 			for(int i = 1; fileNotExist; i++){
 				if(dest.exists()){
-					dest = new File(nextMap+i);
+					dest = new File("playing"+nextMap+i);
 					System.out.println("Value of 'i' is now:" + i);
 				} else {
-					dest = new File(nextMap + Integer.toString((int)i));
+					dest = new File("playing"+nextMap + Integer.toString((int)i));
 					fileNotExist = false;
 				}
 			}
@@ -52,7 +52,7 @@ public class MapLoader {
 		//Unloads last played map.
 		deleteWorld(lastMap.getName());
 		if(mapXML.exists()){
-			ScoreboardLoading.initScoreboard(dest.getName());
+			ScoreboardLoading.initScoreboard(dest.getName(), mapXML);
 		}
 	}
 

@@ -11,10 +11,6 @@ import cl.eilers.tatanpoker09.utils.Timer;
 
 @SuppressWarnings("unused")
 public class Cancel implements CommandExecutor{
-	private Scrimmage plugin;
-	public Cancel(Scrimmage instance) {
-		plugin = instance;
-	}
 	public boolean onCommand(final CommandSender sender, Command cmd, String label, String[] args) {
 		return true;
 	}

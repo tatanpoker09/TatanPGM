@@ -55,7 +55,7 @@ public final class Scrimmage extends JavaPlugin implements Listener {
 		getCommand("setserver").setExecutor(new SetServer());
 		getCommand("setnext").setExecutor(new Setnext());
 		getCommand("cycle").setExecutor(new Cycle());
-		getCommand("cancel").setExecutor(new Cancel(this));
+		getCommand("cancel").setExecutor(new Cancel());
 		getCommand("lobby").setExecutor(new Lobby());
 		getCommand("join").setExecutor(new Join());
 		getCommand("start").setExecutor(new Start());
@@ -112,12 +112,12 @@ public final class Scrimmage extends JavaPlugin implements Listener {
 	}
 
 	public static void mapsLoad(){
-		for(File mapName : MapUtils.MapList()){
+		for(String mapName : MapUtils.MapList()){
 			mapNames.clear();
-			File mapXML = new File("maps/"+mapName.getName()+"/map.xml");
+			File mapXML = new File("maps/"+mapName+"/map.xml");
 			if(mapXML.exists()){
-				mapNames.add(ScoreboardUtils.getMapName(mapName.getName()));
-				System.out.println(ScoreboardUtils.getMapName(mapName.getName()));
+				mapNames.addAll(MapUtils.MapList());
+				System.out.println(ScoreboardUtils.getMapName(mapXML));
 			}
 		}
 	}

@@ -1,5 +1,6 @@
 package cl.eilers.tatanpoker09.utils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -76,7 +77,7 @@ public class ScoreboardUtils {
 				}
 			}
 		} else {
-			System.out.println("Player:"+ playerToJoin.getName()+" can't join the team '"+teamToJoin+"' because it doesn't exist.");
+			playerToJoin.sendMessage(ChatColor.RED+"No teams matched query.");
 		}
 	}
 	
@@ -88,7 +89,7 @@ public class ScoreboardUtils {
 		}
 	}
 	
-	public static String getMapName(String map){
+	public static String getMapName(File map){
 		String mapName = null;
 		try {
 			Document mapXML = MapXMLLoading.LoadXML(map);

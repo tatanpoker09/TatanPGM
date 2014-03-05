@@ -25,8 +25,7 @@ import cl.eilers.tatanpoker09.utils.ScoreboardUtils;
 public class MapXMLLoading {
 	static String[][] teamInfo = new String[ScoreboardUtils.mainBoard.getTeams().size()-1][3];
 
-	public static Document LoadXML(String nextMap) throws ParserConfigurationException{
-		File mapXML = new File("maps/"+nextMap+"/map.xml");
+	public static Document LoadXML(File mapXML) throws ParserConfigurationException{
 		Document doc = null;
 		if(mapXML.exists()){
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -44,13 +43,13 @@ public class MapXMLLoading {
 		return doc;
 	}
 
-	public static String[] getObjectiveTypes(String nextMap){
+	public static String[] getObjectiveTypes(File mapXMLFile){
 		String[] objectiveTypes = new String[3]; 
 		try {
 			int n = 0;
 			int possibleError = 0;
 			NodeList objectives;
-			Document mapXML = LoadXML(nextMap);
+			Document mapXML = LoadXML(mapXMLFile);
 			objectives = mapXML.getElementsByTagName("cores");
 			if(objectives.getLength()>0){
 				objectiveTypes[n] = "cores";
@@ -84,11 +83,11 @@ public class MapXMLLoading {
 
 
 
-	public static String[][] getTeamInfo(String nextMap){
+	public static String[][] getTeamInfo(File nextMap){
 		return teamXML(nextMap);
 	}
 
-	public static String[][] teamXML(String nextMap){
+	public static String[][] teamXML(File nextMap){
 		try {
 			if(LoadXML(nextMap)!=null){
 				Document doc = LoadXML(nextMap);
@@ -102,7 +101,9 @@ public class MapXMLLoading {
 						teamInfo[item][0]=nameNode.item(item).getAttributes().getNamedItem("color").getNodeValue();  
 						teamInfo[item][1]=nameNode.item(item).getAttributes().getNamedItem("max").getNodeValue();
 						teamInfo[item][2]= nameNode.item(item).getTextContent();
+						System.out.println("[TatanPGM] Found Team!: "+teamInfo[item][2]);
 						item++;
+
 					}
 				}
 			}	
@@ -121,7 +122,6 @@ public class MapXMLLoading {
 			for(OfflinePlayer player : team.getPlayers()){
 				if(player.getPlayer()!=null){
 					if(spawnLocation!=null){
-						player.getPlayer().setBedSpawnLocation(spawnLocation);
 						player.getPlayer().teleport(spawnLocation);
 					} else{
 					}
@@ -141,11 +141,13 @@ public class MapXMLLoading {
 	}
 
 	public static Location getSpawnLocation(Team team) {
+		String worldName = Bukkit.getPluginManager().getPlugin("TatanPGM").getConfig().getString("TatanPGM.CurrentMap");
+		World scrimmageWorld = Bukkit.getWorld(worldName);
 		NodeList spawnNode = null;
-		World scrimmageWorld = Bukkit.getServer().getWorld(Bukkit.getPluginManager().getPlugin("TatanPGM").getConfig().getString("TatanPGM.CurrentMap"));
 		Location defaultLocation = null;
 		try {
-			Document mapXML = LoadXML(Bukkit.getPluginManager().getPlugin("TatanPGM").getConfig().getString("TatanPGM.NextMap"));
+			File mapXMLFile = new File(scrimmageWorld.getName() + "/map.xml");
+			Document mapXML = LoadXML(mapXMLFile);
 			NodeList spawnsNode = mapXML.getElementsByTagName("spawns");
 			Node nNode = spawnsNode.item(0);
 			Element spawn = (Element)nNode;
@@ -165,7 +167,6 @@ public class MapXMLLoading {
 				n = 10;
 			}
 			if(n < 9){
-				System.out.println(spawnNode.item(0).getChildNodes().item(0).getNodeName());
 				String defaultSpawn = spawnNode.item(n).getChildNodes().item(0).getAttributes().getNamedItem("base").getNodeValue();
 				Float yaw = Float.parseFloat(spawnNode.item(n).getAttributes().getNamedItem("yaw").getNodeValue());
 				defaultLocation = getLocationFromString(defaultSpawn, scrimmageWorld);

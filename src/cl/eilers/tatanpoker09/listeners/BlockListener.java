@@ -1,15 +1,17 @@
 package cl.eilers.tatanpoker09.listeners;
 
+import java.io.File;
+
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 import cl.eilers.tatanpoker09.map.MapXMLLoading;
 import cl.eilers.tatanpoker09.match.Match;
@@ -25,7 +27,8 @@ public class BlockListener implements Listener{
 					event.setCancelled(true);
 				}
 				try {
-					Document mapXML = MapXMLLoading.LoadXML(Bukkit.getPluginManager().getPlugin("TatanPGM").getConfig().getString("TatanPGM.NextMap"));
+					File mapXMLFile = new File(event.getPlayer().getWorld().getName()+"/map.xml");
+					Document mapXML = MapXMLLoading.LoadXML(mapXMLFile);
 					NodeList maxHeightNode = mapXML.getElementsByTagName("maxbuildheight");
 					String maxHeightString = maxHeightNode.item(0).getTextContent();
 					if(event.getBlock().getLocation().getY()-1>Integer.parseInt(maxHeightString)){
