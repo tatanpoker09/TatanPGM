@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.event.EventHandler;
@@ -30,22 +31,20 @@ import cl.eilers.tatanpoker09.listeners.ChatListener;
 import cl.eilers.tatanpoker09.listeners.CommandsListener;
 import cl.eilers.tatanpoker09.listeners.DeathListener;
 import cl.eilers.tatanpoker09.listeners.InventoryListener;
-import cl.eilers.tatanpoker09.utils.Handler_serverstop;
 import cl.eilers.tatanpoker09.utils.MapUtils;
 import cl.eilers.tatanpoker09.utils.ScoreboardUtils;
 import cl.eilers.tatanpoker09.utils.Timer;
 
 public final class Scrimmage extends JavaPlugin implements Listener {
 	/*TODO
-	 * Fix bug on /maps giving first line blank.
 	 * Work on objectives
 	 * Objectives into scoreboards.
 	 * Get tab with colors.
 	 * Fix /g
 	 * Work on regions
 	 */
-	
-	
+
+
 	private File DontModify = new File("plugins/TatanPGM/DontModify.yml");
 	public static List<Timer> tList = new ArrayList<Timer>();
 	public static List<String> mapNames = new ArrayList<String>();
@@ -83,12 +82,6 @@ public final class Scrimmage extends JavaPlugin implements Listener {
 			getConfig().set("TatanPGM.HasCreatedTeams", true);
 			loadConfiguration();
 			this.saveDefaultConfig();
-			//Handler to run the Handler class on server shutdown.
-			try {
-				Runtime.getRuntime().addShutdownHook(new Handler_serverstop());
-			} catch (Exception e){
-				e.printStackTrace();
-			}
 		}
 	}
 	@Override
@@ -127,6 +120,8 @@ public final class Scrimmage extends JavaPlugin implements Listener {
 		System.out.println("OnJoin Has been triggered!");
 		World spawn = new WorldCreator(Bukkit.getServer().getWorlds().get(0).getName()).createWorld();
 		event.getPlayer().teleport(spawn.getSpawnLocation());
+		event.getPlayer().setGameMode(GameMode.CREATIVE);
+		event.getPlayer().getInventory().clear();
 		if(ScoreboardUtils.teamExists("Observers")){
 			ScoreboardUtils.mainBoard.getTeam("Observers").addPlayer(event.getPlayer());;
 
