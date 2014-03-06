@@ -67,7 +67,6 @@ public class Match {
 		}
 	}
 	private static boolean hasAWinner() {
-		
 		return false;
 	}
 
