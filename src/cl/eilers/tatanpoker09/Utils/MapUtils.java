@@ -12,6 +12,7 @@ public class MapUtils {
 		for(File file : maps){
 			String mapName = file.getName();
 			mapNames.add(mapName);
+			System.out.println(mapName);
 		}
 		return (ArrayList<String>) mapNames;
 	}

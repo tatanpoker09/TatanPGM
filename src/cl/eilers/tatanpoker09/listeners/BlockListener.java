@@ -31,7 +31,7 @@ public class BlockListener implements Listener{
 					Document mapXML = MapXMLLoading.LoadXML(mapXMLFile);
 					NodeList maxHeightNode = mapXML.getElementsByTagName("maxbuildheight");
 					String maxHeightString = maxHeightNode.item(0).getTextContent();
-					if(event.getBlock().getLocation().getY()-1>Integer.parseInt(maxHeightString)){
+					if(event.getBlock().getLocation().getY()>Integer.parseInt(maxHeightString)-1){
 						event.setCancelled(true);
 						event.getPlayer().sendMessage(ChatColor.RED+"You can not place blocks above height limit.");
 					}

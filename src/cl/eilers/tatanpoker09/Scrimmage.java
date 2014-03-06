@@ -6,13 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.World;
-import org.bukkit.WorldCreator;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -31,6 +25,7 @@ import cl.eilers.tatanpoker09.listeners.ChatListener;
 import cl.eilers.tatanpoker09.listeners.CommandsListener;
 import cl.eilers.tatanpoker09.listeners.DeathListener;
 import cl.eilers.tatanpoker09.listeners.InventoryListener;
+import cl.eilers.tatanpoker09.listeners.PlayerListener;
 import cl.eilers.tatanpoker09.utils.MapUtils;
 import cl.eilers.tatanpoker09.utils.ScoreboardUtils;
 import cl.eilers.tatanpoker09.utils.Timer;
@@ -47,7 +42,7 @@ public final class Scrimmage extends JavaPlugin implements Listener {
 
 	private File DontModify = new File("plugins/TatanPGM/DontModify.yml");
 	public static List<Timer> tList = new ArrayList<Timer>();
-	public static List<String> mapNames = new ArrayList<String>();
+	public static ArrayList<String> mapNames = new ArrayList<String>();
 	@Override
 	public void onEnable(){
 		//Commands
@@ -67,12 +62,12 @@ public final class Scrimmage extends JavaPlugin implements Listener {
 		this.getConfig().addDefault("TatanPGM.serverName", "A TatanPGM Server!");
 		//Listeners
 		PluginManager pm = Bukkit.getServer().getPluginManager();
-		pm.registerEvents(this, this);
 		pm.registerEvents(new BlockListener(), this);
 		pm.registerEvents(new CommandsListener(), this);
 		pm.registerEvents(new ChatListener(), this);
 		pm.registerEvents(new InventoryListener(), this);
 		pm.registerEvents(new DeathListener(), this);
+		pm.registerEvents(new PlayerListener(), this);
 		//Registers main teams.
 
 		if(ScoreboardUtils.mainTeamsExist()==false){
@@ -93,6 +88,14 @@ public final class Scrimmage extends JavaPlugin implements Listener {
 		saveConfig();
 		reloadConfig();
 	}
+	
+	public boolean mapsFolderExists(){
+		File mapsFolder = new File("maps/");
+		if(mapsFolder.exists()){
+			return true;
+		}
+		return false;
+	}
 
 	public void createYML(File name){
 		if (!name.exists()) {
@@ -105,30 +108,12 @@ public final class Scrimmage extends JavaPlugin implements Listener {
 	}
 
 	public static void mapsLoad(){
+		mapNames.clear();
 		for(String mapName : MapUtils.MapList()){
-			mapNames.clear();
 			File mapXML = new File("maps/"+mapName+"/map.xml");
 			if(mapXML.exists()){
-				mapNames.addAll(MapUtils.MapList());
-				System.out.println(ScoreboardUtils.getMapName(mapXML));
+				mapNames.add(ScoreboardUtils.getMapName(mapXML));
 			}
 		}
-	}
-
-	@EventHandler //JoinMessage, also teleports the player to the spawn.
-	public void onJoin(PlayerJoinEvent event){
-		System.out.println("OnJoin Has been triggered!");
-		World spawn = new WorldCreator(Bukkit.getServer().getWorlds().get(0).getName()).createWorld();
-		event.getPlayer().teleport(spawn.getSpawnLocation());
-		event.getPlayer().setGameMode(GameMode.CREATIVE);
-		event.getPlayer().getInventory().clear();
-		if(ScoreboardUtils.teamExists("Observers")){
-			ScoreboardUtils.mainBoard.getTeam("Observers").addPlayer(event.getPlayer());;
-
-		}
-		String serverName = getConfig().getString("TatanPGM.serverName");
-		event.getPlayer().sendMessage(ChatColor.BLUE+"########################");
-		event.getPlayer().sendMessage(ChatColor.RED+"Welcome to " + serverName);
-		event.getPlayer().sendMessage(ChatColor.BLUE+"########################");
 	}
 }

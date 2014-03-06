@@ -6,6 +6,7 @@ import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import cl.eilers.tatanpoker09.commands.Setnext;
 import cl.eilers.tatanpoker09.map.MapLoader;
 import cl.eilers.tatanpoker09.match.Match;
 
@@ -31,12 +32,12 @@ public class Timer extends BukkitRunnable {
 		// What you want to schedule goes here
 		if (counter > 0) {
 			if(plugin.getConfig().getBoolean("TatanPGM.CancelCountdown")==false){
-				plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA+"Cycling to "+ChatColor.AQUA+plugin.getConfig().getString("TatanPGM.NextMap")+ChatColor.DARK_AQUA+" in "+ChatColor.DARK_RED+counter--+ChatColor.DARK_AQUA+" seconds!");
+				plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA+"Cycling to "+ChatColor.AQUA+Setnext.nextMap+ChatColor.DARK_AQUA+" in "+ChatColor.DARK_RED+counter--+ChatColor.DARK_AQUA+" seconds!");
 			} else {
 				this.cancel();
 			}
 		} else {
-			MapLoader.Load(plugin.getConfig().getString("TatanPGM.NextMap"), this.world);
+			MapLoader.Load(Setnext.nextMap, this.world);
 			Match.hasStarted=false;
 			this.cancel();
 		}

@@ -10,7 +10,6 @@ public class Maps implements CommandExecutor{
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
 		if(Scrimmage.mapNames!=null){
 			if(Scrimmage.mapNames.size()>0){
-				System.out.println(Scrimmage.mapNames.size());
 				for(String map : Scrimmage.mapNames){
 					sender.sendMessage(map);
 				}

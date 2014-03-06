@@ -2,6 +2,7 @@ package cl.eilers.tatanpoker09.match;
 
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
@@ -13,6 +14,7 @@ import cl.eilers.tatanpoker09.utils.ScoreboardUtils;
 public class Match {
 	public static boolean hasStarted = false;
 	public static boolean hasEnded = false;
+	private static String winner;
 	public static String getMatchStatus(){
 		if(hasEnded){
 			return "END";
@@ -41,36 +43,49 @@ public class Match {
 		return currentMap;
 	}
 
-		public static void endMatch(){
-			if(Match.getMatchStatus().equals("PLAYING")){
-				for(Team team : ScoreboardUtils.mainBoard.getTeams()){
-					if(!team.getName().equals("Observers")){
-						for(OfflinePlayer player : team.getPlayers()){
+	public static void endMatch(){
+		if(Match.getMatchStatus().equals("PLAYING")){
+			for(Team team : ScoreboardUtils.mainBoard.getTeams()){
+				if(!team.getName().equals("Observers")){
+					for(OfflinePlayer player : team.getPlayers()){
+						for(OfflinePlayer playerObserver : ScoreboardUtils.mainBoard.getTeam("Observers").getPlayers())
 							if(player.getPlayer()!=null){
 								player.getPlayer().setGameMode(GameMode.CREATIVE);
+								player.getPlayer().hidePlayer(playerObserver.getPlayer());
 							}
-						}
 					}
 				}
-				hasStarted = true;
-				hasEnded = true;
 			}
-		}
-		public static void startMatch(){
-			if(Match.getMatchStatus().equals("PREMATCH")){
-				for(Team team : ScoreboardUtils.mainBoard.getTeams()){
-					if(!team.getName().equals("Observers")){
-						for(OfflinePlayer player : team.getPlayers()){
-							if(player.getPlayer()!=null){
-								player.getPlayer().setGameMode(GameMode.SURVIVAL);
-								player.getPlayer().getInventory().clear();
-							}
-						}
-					}
-				}
-				hasEnded = false;
-				hasStarted = true;
-				MapXMLLoading.spawnTeleporting();
+			Bukkit.broadcastMessage(ChatColor.DARK_PURPLE+"*******************");
+			Bukkit.broadcastMessage(ChatColor.DARK_PURPLE+"**   "+ChatColor.GOLD+"GAME OVER"+ChatColor.DARK_PURPLE+"   **");
+			if(hasAWinner()){
+			Bukkit.broadcastMessage(ChatColor.DARK_PURPLE+"**  "+winner+"    **");
 			}
+			Bukkit.broadcastMessage(ChatColor.DARK_PURPLE+"*******************");
+			hasStarted = true;
+			hasEnded = true;
 		}
 	}
+	private static boolean hasAWinner() {
+		
+		return false;
+	}
+
+	public static void startMatch(){
+		if(Match.getMatchStatus().equals("PREMATCH")){
+			for(Team team : ScoreboardUtils.mainBoard.getTeams()){
+				if(!team.getName().equals("Observers")){
+					for(OfflinePlayer player : team.getPlayers()){
+						if(player.getPlayer()!=null){
+							player.getPlayer().setGameMode(GameMode.SURVIVAL);
+							player.getPlayer().getInventory().clear();
+						}
+					}
+				}
+			}
+			hasEnded = false;
+			hasStarted = true;
+			MapXMLLoading.spawnTeleporting();
+		}
+	}
+}

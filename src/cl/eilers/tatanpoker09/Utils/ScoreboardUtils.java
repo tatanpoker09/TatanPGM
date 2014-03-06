@@ -95,6 +95,7 @@ public class ScoreboardUtils {
 			Document mapXML = MapXMLLoading.LoadXML(map);
 			NodeList name = mapXML.getElementsByTagName("name");
 			mapName = name.item(0).getTextContent();
+			System.out.println("FOUND MAP!: " + mapName);
 		} catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
