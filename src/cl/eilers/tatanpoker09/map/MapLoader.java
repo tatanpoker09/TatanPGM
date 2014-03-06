@@ -14,7 +14,7 @@ import cl.eilers.tatanpoker09.utils.FileUtils;
 
 public class MapLoader {
 	public static ArrayList<String> mapNames = null;
-	public static void Load(String nextMap, World lastMap){
+	public static void Load(String nextMap){
 		System.out.println("MapLoading is starting");
 		boolean fileNotExist = true;
 		File src = new File("maps/"+nextMap);
@@ -50,18 +50,24 @@ public class MapLoader {
 		Match.hasEnded=false;
 		File mapXML = new File("maps/"+nextMap+"/map.xml");
 		//Unloads last played map.
-		deleteWorld(lastMap.getName());
+		for(World world : Bukkit.getWorlds()){
+			if(world.getName().startsWith("playing")){
+				if(world.getPlayers().size()==0){
+					deleteWorld(world);
+				}
+			}
+		}
 		if(mapXML.exists()){
 			ScoreboardLoading.initScoreboard(dest.getName(), mapXML);
 		}
 	}
 
-	public static boolean deleteWorld(String lastWorldName){
-		if(!lastWorldName.equals(Bukkit.getWorlds().get(0).getName())){
-			System.out.println("Unloading map!" + lastWorldName);
-			File lastWorld = new File(lastWorldName);
-			Bukkit.getServer().unloadWorld(lastWorldName, true);
-			FileUtils.delete(lastWorld);
+	public static boolean deleteWorld(World lastWorld){
+		if(!lastWorld.getName().equals(Bukkit.getWorlds().get(0).getName())){
+			System.out.println("Unloading map!" + lastWorld.getName());
+			File lastWorldFile = new File(lastWorld.getName());
+			Bukkit.getServer().unloadWorld(lastWorld.getName(), true);
+			FileUtils.delete(lastWorldFile);
 			return true;
 		}
 		return false;

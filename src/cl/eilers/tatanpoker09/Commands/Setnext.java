@@ -23,7 +23,7 @@ public class Setnext implements CommandExecutor {
 		if(Scrimmage.mapNames!=null){
 			if(Scrimmage.mapNames.size()>0){
 				for(String mapList : Scrimmage.mapNames){
-					if(StringUtils.startsWithIgnoreCase(mapList, args[0])){
+					if(StringUtils.startsWithIgnoreCase(mapList, mapName)){
 						nextMap = mapList;
 					}
 				}

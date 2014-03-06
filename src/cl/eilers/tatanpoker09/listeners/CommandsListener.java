@@ -27,7 +27,7 @@ public class CommandsListener implements Listener{
 			}
 			for(World world : Bukkit.getWorlds()){
 				if(world.getName().startsWith("playing")){
-					MapLoader.deleteWorld(world.getName());
+					MapLoader.deleteWorld(world);
 				}
 
 			}
@@ -41,7 +41,7 @@ public class CommandsListener implements Listener{
 			}
 			for(World world : Bukkit.getWorlds()){
 				if(world.getName().startsWith("playing")){
-					MapLoader.deleteWorld(world.getName());
+					MapLoader.deleteWorld(world);
 				}
 
 			}		

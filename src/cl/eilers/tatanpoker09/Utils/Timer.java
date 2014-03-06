@@ -2,7 +2,6 @@ package cl.eilers.tatanpoker09.utils;
 
 
 import org.bukkit.ChatColor;
-import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -16,16 +15,13 @@ public class Timer extends BukkitRunnable {
 
 	private int counter;
 	
-	private World world;
-	
-	public Timer(Plugin plugin2, int counter, World world) {
+	public Timer(Plugin plugin2, int counter) {
 		this.plugin = plugin2;
 		if (counter < 1) {
 			throw new IllegalArgumentException("You must supply a number");
 		} else {
 			this.counter = counter;
 		}
-		this.world = world;
 	}
 
 	public void run() {
@@ -37,7 +33,7 @@ public class Timer extends BukkitRunnable {
 				this.cancel();
 			}
 		} else {
-			MapLoader.Load(Setnext.nextMap, this.world);
+			MapLoader.Load(Setnext.nextMap);
 			Match.hasStarted=false;
 			this.cancel();
 		}
