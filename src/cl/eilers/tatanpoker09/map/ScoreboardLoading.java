@@ -15,11 +15,11 @@ import cl.eilers.tatanpoker09.listeners.ChatListener;
 import cl.eilers.tatanpoker09.utils.ScoreboardUtils;
 
 public class ScoreboardLoading {
-	public static void initScoreboard(String nextMapFolder, File mapXML){
+	public static void initScoreboard(File mapFile){
 		Scoreboard objectivesBoard = ScoreboardUtils.scoreBManager.getNewScoreboard();	
 		ArrayList<String> scoreboardDisplays = new ArrayList<String>();
 		//Getting info from XML
-		String[][] teamInfo = MapXMLLoading.getTeamInfo(mapXML);
+		String[][] teamInfo = MapXMLLoading.getTeamInfo(mapFile);
 		String teamOneColor = teamInfo[0][0];
 		//int teamOneMax = Integer.parseInt(teamInfo[0][1]);
 		String teamOneName = teamInfo[0][2];
@@ -45,7 +45,7 @@ public class ScoreboardLoading {
 		
 		
 		ScoreboardUtils.organizeScoreboard(scoreboardDisplays, objectivesBoard);
-		for(Player playersOnWorld : Bukkit.getWorld(nextMapFolder).getPlayers()){
+		for(Player playersOnWorld : Bukkit.getWorld(MapXMLLoading.currentMap.getName()).getPlayers()){
 			playersOnWorld.setScoreboard(objectivesBoard);
 			ScoreboardUtils.mainBoard.getTeam("Observers").addPlayer(playersOnWorld);
 			playersOnWorld.getInventory().clear();

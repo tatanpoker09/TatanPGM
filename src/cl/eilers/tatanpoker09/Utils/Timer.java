@@ -33,7 +33,7 @@ public class Timer extends BukkitRunnable {
 				this.cancel();
 			}
 		} else {
-			MapLoader.Load(Setnext.nextMap);
+			MapLoader.Load();
 			Match.hasStarted=false;
 			this.cancel();
 		}

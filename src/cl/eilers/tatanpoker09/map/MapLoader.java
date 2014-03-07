@@ -9,23 +9,24 @@ import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
 
+import cl.eilers.tatanpoker09.commands.Setnext;
 import cl.eilers.tatanpoker09.match.Match;
 import cl.eilers.tatanpoker09.utils.FileUtils;
 
 public class MapLoader {
 	public static ArrayList<String> mapNames = null;
-	public static void Load(String nextMap){
+	public static void Load(){
 		System.out.println("MapLoading is starting");
 		boolean fileNotExist = true;
-		File src = new File("maps/"+nextMap);
-		File dest = new File("playing"+nextMap+"1");
+		File src = new File("maps/"+Setnext.nextMap);
+		File dest = new File("playing"+Setnext.nextMap+"1");
 		if(dest.exists()){
 			for(int i = 1; fileNotExist; i++){
 				if(dest.exists()){
-					dest = new File("playing"+nextMap+i);
+					dest = new File("playing"+Setnext.nextMap+i);
 					System.out.println("Value of 'i' is now:" + i);
 				} else {
-					dest = new File("playing"+nextMap + Integer.toString((int)i));
+					dest = new File("playing"+Setnext.nextMap + Integer.toString((int)i));
 					fileNotExist = false;
 				}
 			}
@@ -38,9 +39,7 @@ public class MapLoader {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		Bukkit.getPluginManager().getPlugin("TatanPGM").getConfig().set("TatanPGM.CurrentMap", dest.getName());
-		Bukkit.getPluginManager().getPlugin("TatanPGM").saveConfig();
+		MapXMLLoading.currentMap = dest;
 
 		World nextWorld = new WorldCreator(dest.getName()).createWorld();
 		nextWorld.setGameRuleValue("doMobSpawning", "false");
@@ -48,7 +47,7 @@ public class MapLoader {
 			playersOnWorld.teleport(nextWorld.getSpawnLocation());
 		}
 		Match.hasEnded=false;
-		File mapXML = new File("maps/"+nextMap+"/map.xml");
+		File mapXML = new File(MapXMLLoading.currentMap.getName()+"/map.xml");
 		//Unloads last played map.
 		for(World world : Bukkit.getWorlds()){
 			if(world.getName().startsWith("playing")){
@@ -58,7 +57,9 @@ public class MapLoader {
 			}
 		}
 		if(mapXML.exists()){
-			ScoreboardLoading.initScoreboard(dest.getName(), mapXML);
+			ScoreboardLoading.initScoreboard(mapXML);
+		} else {
+			System.out.println(mapXML.getPath());
 		}
 	}
 

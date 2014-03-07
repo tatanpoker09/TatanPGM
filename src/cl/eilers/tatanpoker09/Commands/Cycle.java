@@ -36,7 +36,7 @@ public class Cycle implements CommandExecutor {
 				if(args.length<2){
 					if(CodingUtils.isNumeric(args[0])){
 						if(args[0].equals("0")){
-							MapLoader.Load(Setnext.nextMap);
+							MapLoader.Load();
 						} else if(Integer.parseInt(args[0])<0){
 							sender.sendMessage(ChatColor.RED+"You cannot cycle a match in less than zero seconds.");
 						} else {
@@ -59,6 +59,8 @@ public class Cycle implements CommandExecutor {
 					Scrimmage.tList.get(0).runTaskTimer(plugin, 0L, 20L);
 					return true;
 				}
+		} else {
+			sender.sendMessage(ChatColor.RED+"Please use '/setnext' first.");
 		}
 		return false;
 	}

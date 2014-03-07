@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -91,15 +89,10 @@ public class ScoreboardUtils {
 	
 	public static String getMapName(File map){
 		String mapName = null;
-		try {
-			Document mapXML = MapXMLLoading.LoadXML(map);
-			NodeList name = mapXML.getElementsByTagName("name");
-			mapName = name.item(0).getTextContent();
-			System.out.println("FOUND MAP!: " + mapName);
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Document mapXML = MapXMLLoading.LoadXML(map);
+		NodeList name = mapXML.getElementsByTagName("name");
+		mapName = name.item(0).getTextContent();
+		System.out.println("FOUND MAP!: " + mapName);
 		return mapName;
 
 	}
