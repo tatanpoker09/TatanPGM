@@ -37,12 +37,14 @@ public final class Scrimmage extends JavaPlugin implements Listener {
 	 * Get tab with colors.
 	 * Fix /g
 	 * Work on regions
+	 * Big bug on objectives
 	 */
 
 
 	private File DontModify = new File("plugins/TatanPGM/DontModify.yml");
 	public static List<Timer> tList = new ArrayList<Timer>();
 	public static ArrayList<String> mapNames = new ArrayList<String>();
+	public static ArrayList<String> mapFolders = new ArrayList<String>();
 	@Override
 	public void onEnable(){
 		//Commands
@@ -78,6 +80,8 @@ public final class Scrimmage extends JavaPlugin implements Listener {
 			loadConfiguration();
 			this.saveDefaultConfig();
 		}
+		mapsLoad();
+		
 	}
 	@Override
 	public void onDisable(){
@@ -112,6 +116,7 @@ public final class Scrimmage extends JavaPlugin implements Listener {
 		for(String mapName : MapUtils.MapList()){
 			File mapXML = new File("maps/"+mapName+"/map.xml");
 			if(mapXML.exists()){
+				mapFolders.add(mapName);
 				mapNames.add(ScoreboardUtils.getMapName(mapXML));
 			}
 		}

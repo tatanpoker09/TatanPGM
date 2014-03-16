@@ -54,7 +54,7 @@ public class Match {
 				}
 			}
 			Bukkit.broadcastMessage(ChatColor.DARK_PURPLE+"*******************");
-			Bukkit.broadcastMessage(ChatColor.DARK_PURPLE+"**   "+ChatColor.GOLD+"GAME OVER"+ChatColor.DARK_PURPLE+"   **");
+			Bukkit.broadcastMessage(ChatColor.DARK_PURPLE+"**   "+ChatColor.GOLD+"   GAME OVER"+ChatColor.DARK_PURPLE+"    **");
 			if(hasAWinner()){
 			Bukkit.broadcastMessage(ChatColor.DARK_PURPLE+"**  "+winner+"    **");
 			}

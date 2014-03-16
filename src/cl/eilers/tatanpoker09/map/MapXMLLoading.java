@@ -8,7 +8,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
@@ -24,7 +23,8 @@ import cl.eilers.tatanpoker09.utils.ScoreboardUtils;
 public class MapXMLLoading {
 	static String[][] teamInfo = new String[ScoreboardUtils.mainBoard.getTeams().size()-1][3];
 
-	public static File currentMap = null;
+	public static File currentMap;
+	private static int heightLimit;
 
 	public static Document LoadXML(File mapXML){
 		Document doc = null;
@@ -40,50 +40,31 @@ public class MapXMLLoading {
 			}
 
 		} else {
-			System.out.println("Couldn't find XML File for map: "+currentMap.getName());
+			System.out.println("Couldn't find XML File");
+			System.out.println(mapXML.getPath());
 		}
 		return doc;
 	}
 
-	public static String[] getObjectiveTypes(File mapFile){
-		String[] objectiveTypes = new String[3];
+	/*public static ArrayList<Objective> getObjectiveTypes(File mapFile){
 		Document mapXML = LoadXML(mapFile);
 		if(mapXML!=null){
-			int n = 0;
-			int possibleError = 0;
-			NodeList objectives;
-			objectives = mapXML.getElementsByTagName("cores");
-			if(objectives.getLength()>0){
-				objectiveTypes[n] = "cores";
-				n++;
-			} else {
-				possibleError++;
-			}
-			objectives = mapXML.getElementsByTagName("wools");
-			if(objectives.getLength()>0){
-				objectiveTypes[n] = "wools";
-				n++;
-			} else {
-				possibleError++;
-			}
-			objectives = mapXML.getElementsByTagName("destroyables");
-			if(objectives.getLength()>0){
-				objectiveTypes[n] = "destroyables";
-			} else {
-				possibleError++;
-			}
-			if(possibleError >= 3){
-				Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.DARK_RED+"WE COULDN'T FIND ANY OBJECTIVES. ASSUMING IT IS A TDM");
-			}
+
 		}
-		return objectiveTypes;
 	}
+	 */
 
-
+	public static void loadExtras(File mapXMLFile){
+		Document mapXML = MapXMLLoading.LoadXML(mapXMLFile);
+		NodeList maxHeightNode = mapXML.getElementsByTagName("maxbuildheight");
+		String maxHeightString = maxHeightNode.item(0).getTextContent();
+		System.out.println("Found height limit!: "+ maxHeightString);
+		heightLimit = Integer.parseInt(maxHeightString)-1;
+	}
 
 	public static String[][] getTeamInfo(File mapFile){
 		return teamXML(mapFile);
-	}
+	}	
 
 	public static String[][] teamXML(File mapFile){
 		Document mapXML = LoadXML(mapFile);
@@ -129,6 +110,7 @@ public class MapXMLLoading {
 		return new Location (world ,parsed[0], parsed[1], parsed[2]);
 	}
 
+
 	public static Location getSpawnLocation(Team team){
 		File mapFile = new File(currentMap.getName()+"/map.xml");
 		Document mapXML = LoadXML(mapFile);
@@ -160,5 +142,13 @@ public class MapXMLLoading {
 			defaultLocation.setYaw(yaw);
 		}
 		return defaultLocation;
+	}
+
+	public static void setHeightLimit(int height){
+		heightLimit = height;
+	}
+
+	public static int getHeightLimit(){
+		return heightLimit;
 	}
 }

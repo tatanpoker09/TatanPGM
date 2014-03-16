@@ -10,7 +10,6 @@ import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
 
 import cl.eilers.tatanpoker09.commands.Setnext;
-import cl.eilers.tatanpoker09.match.Match;
 import cl.eilers.tatanpoker09.utils.FileUtils;
 
 public class MapLoader {
@@ -18,7 +17,7 @@ public class MapLoader {
 	public static void Load(){
 		System.out.println("MapLoading is starting");
 		boolean fileNotExist = true;
-		File src = new File("maps/"+Setnext.nextMap);
+		File src = Setnext.nextMapFolder;
 		File dest = new File("playing"+Setnext.nextMap+"1");
 		if(dest.exists()){
 			for(int i = 1; fileNotExist; i++){
@@ -26,7 +25,7 @@ public class MapLoader {
 					dest = new File("playing"+Setnext.nextMap+i);
 					System.out.println("Value of 'i' is now:" + i);
 				} else {
-					dest = new File("playing"+Setnext.nextMap + Integer.toString((int)i));
+					dest = new File("playing"+Setnext.nextMap+ Integer.toString((int)i));
 					fileNotExist = false;
 				}
 			}
@@ -40,14 +39,13 @@ public class MapLoader {
 			e.printStackTrace();
 		}
 		MapXMLLoading.currentMap = dest;
-
 		World nextWorld = new WorldCreator(dest.getName()).createWorld();
 		nextWorld.setGameRuleValue("doMobSpawning", "false");
 		for(Player playersOnWorld : Bukkit.getOnlinePlayers()){
 			playersOnWorld.teleport(nextWorld.getSpawnLocation());
 		}
-		Match.hasEnded=false;
 		File mapXML = new File(MapXMLLoading.currentMap.getName()+"/map.xml");
+		MapXMLLoading.loadExtras(mapXML);
 		//Unloads last played map.
 		for(World world : Bukkit.getWorlds()){
 			if(world.getName().startsWith("playing")){

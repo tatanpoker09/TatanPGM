@@ -1,5 +1,7 @@
 package cl.eilers.tatanpoker09.utils;
 
+import java.util.ArrayList;
+
 public class CodingUtils {
 	public static boolean isNumeric(String str){  
 		try{  
@@ -20,5 +22,13 @@ public class CodingUtils {
 			}
 			mapName = mapName.substring(5);
 		return mapName;
+	}
+	public static boolean containsCaseInsensitive(String strToCompare, ArrayList<String>list){
+	    for(String str:list){
+	        if(str.equalsIgnoreCase(strToCompare)){
+	            return(true);
+	        }
+	    }
+	    return(false);
 	}
 }

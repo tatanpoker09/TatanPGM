@@ -44,12 +44,14 @@ public class PlayerListener implements Listener {
 		Entity getDamaged = event.getEntity();
 		Entity getDamageDealer = event.getDamager();
 		if (getDamaged instanceof Player) {
-			Team damagedPlayer = ScoreboardUtils.mainBoard.getPlayerTeam(((Player) getDamaged).getPlayer());
-			Team damagerPlayer = ScoreboardUtils.mainBoard.getPlayerTeam(((Player)getDamageDealer).getPlayer());
-			if(damagedPlayer.equals("Observers")){
-				event.setCancelled(true);
-			} else if(damagedPlayer.equals(damagerPlayer)){
-				event.setCancelled(true);
+			if(getDamageDealer instanceof Player){
+				Team damagedPlayer = ScoreboardUtils.mainBoard.getPlayerTeam(((Player) getDamaged).getPlayer());
+				Team damagerPlayer = ScoreboardUtils.mainBoard.getPlayerTeam(((Player)getDamageDealer).getPlayer());
+				if(damagedPlayer.equals("Observers")){
+					event.setCancelled(true);
+				} else if(damagedPlayer.equals(damagerPlayer)){
+					event.setCancelled(true);
+				}
 			}
 		}
 	}

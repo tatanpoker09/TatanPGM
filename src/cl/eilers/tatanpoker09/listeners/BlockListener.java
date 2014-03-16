@@ -1,7 +1,5 @@
 package cl.eilers.tatanpoker09.listeners;
 
-import java.io.File;
-
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.bukkit.Bukkit;
@@ -10,8 +8,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 
 import cl.eilers.tatanpoker09.map.MapXMLLoading;
 import cl.eilers.tatanpoker09.match.Match;
@@ -26,15 +22,15 @@ public class BlockListener implements Listener{
 				if(Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(event.getPlayer()).getName().equals("Observers")){
 					event.setCancelled(true);
 				}
-				File mapXMLFile = new File(event.getPlayer().getWorld().getName()+"/map.xml");
-				Document mapXML = MapXMLLoading.LoadXML(mapXMLFile);
-				NodeList maxHeightNode = mapXML.getElementsByTagName("maxbuildheight");
-				String maxHeightString = maxHeightNode.item(0).getTextContent();
-				if(event.getBlock().getLocation().getY()>Integer.parseInt(maxHeightString)-1){
-					event.setCancelled(true);
-					event.getPlayer().sendMessage(ChatColor.RED+"You can not place blocks above height limit.");
+				/*if(Objective.getType().equals("Capture The Wool")){
+					//if(event.getBlock().equals())
+				}*/
+				if(!event.getPlayer().getWorld().equals(Bukkit.getWorlds().get(0))){
+					if(event.getBlock().getLocation().getY()>MapXMLLoading.getHeightLimit()){
+						event.setCancelled(true);
+						event.getPlayer().sendMessage(ChatColor.RED+"You can not place blocks above height limit.");
+					}
 				}
-				
 			}
 		}
 	}

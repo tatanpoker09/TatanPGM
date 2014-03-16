@@ -8,6 +8,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import cl.eilers.tatanpoker09.utils.ScoreboardUtils;
+
 public class Lobby implements CommandExecutor {
 
 	@Override
@@ -15,6 +17,9 @@ public class Lobby implements CommandExecutor {
 		World lobby = new WorldCreator(Bukkit.getWorlds().get(0).getName()).createWorld();
 		Player playerSender = (Player) player;
 		playerSender.teleport(lobby.getSpawnLocation());
+		ScoreboardUtils.mainBoard.getTeam("Observers").addPlayer(playerSender);
+		playerSender.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+		
 		return true;
 	}
 }
