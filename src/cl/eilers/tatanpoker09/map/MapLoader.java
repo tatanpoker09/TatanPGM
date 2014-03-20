@@ -10,6 +10,7 @@ import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
 
 import cl.eilers.tatanpoker09.commands.Setnext;
+import cl.eilers.tatanpoker09.objectives.WoolObjective;
 import cl.eilers.tatanpoker09.utils.FileUtils;
 
 public class MapLoader {
@@ -38,26 +39,29 @@ public class MapLoader {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		MapXMLLoading.currentMap = dest;
+		MapXMLLoading.setCurrentMap(dest);
 		World nextWorld = new WorldCreator(dest.getName()).createWorld();
 		nextWorld.setGameRuleValue("doMobSpawning", "false");
 		for(Player playersOnWorld : Bukkit.getOnlinePlayers()){
 			playersOnWorld.teleport(nextWorld.getSpawnLocation());
 		}
-		File mapXML = new File(MapXMLLoading.currentMap.getName()+"/map.xml");
+		File mapXML = new File(MapXMLLoading.getCurrentMap().getName()+"/map.xml");
+		MapXMLLoading.setMapXML(mapXML);
 		MapXMLLoading.loadExtras(mapXML);
+		WoolObjective.getWools().clear();
+		MapXMLLoading.loadWools(MapXMLLoading.getCurrentMap());
 		//Unloads last played map.
 		for(World world : Bukkit.getWorlds()){
 			if(world.getName().startsWith("playing")){
-				if(world.getPlayers().size()==0){
-					deleteWorld(world);
-				}
+					if(world.getPlayers().size()==0){
+						deleteWorld(world);
+					}
 			}
 		}
 		if(mapXML.exists()){
-			ScoreboardLoading.initScoreboard(mapXML);
+			ScoreboardLoading.initScoreboard();
 		} else {
-			System.out.println(mapXML.getPath());
+			System.out.println(mapXML.getPath() + "Doesn't exist.");
 		}
 	}
 

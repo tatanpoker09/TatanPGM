@@ -7,10 +7,16 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import net.minecraft.util.org.apache.commons.lang3.StringUtils;
+
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.DyeColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.scoreboard.Team;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -18,6 +24,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import cl.eilers.tatanpoker09.objectives.WoolObjective;
 import cl.eilers.tatanpoker09.utils.ScoreboardUtils;
 
 public class MapXMLLoading {
@@ -25,7 +32,22 @@ public class MapXMLLoading {
 
 	public static File currentMap;
 	private static int heightLimit;
-
+	private static Document mapXML;
+	//===============================================
+	public static File getCurrentMap() {
+		return currentMap;
+	}
+	public static void setCurrentMap(File currentMap) {
+		MapXMLLoading.currentMap = currentMap;
+	}
+	//================================================
+	public static void setMapXML(File mapXML){
+		MapXMLLoading.mapXML = LoadXML(mapXML);
+	}
+	public static Document getMapXML(){
+		return mapXML;
+	}
+	//================================================
 	public static Document LoadXML(File mapXML){
 		Document doc = null;
 		if(mapXML.exists()){
@@ -55,19 +77,19 @@ public class MapXMLLoading {
 	 */
 
 	public static void loadExtras(File mapXMLFile){
-		Document mapXML = MapXMLLoading.LoadXML(mapXMLFile);
+		Document mapXML = getMapXML();
 		NodeList maxHeightNode = mapXML.getElementsByTagName("maxbuildheight");
 		String maxHeightString = maxHeightNode.item(0).getTextContent();
 		System.out.println("Found height limit!: "+ maxHeightString);
 		heightLimit = Integer.parseInt(maxHeightString)-1;
 	}
 
-	public static String[][] getTeamInfo(File mapFile){
-		return teamXML(mapFile);
-	}	
+	public static String[][] getTeamInfo(){
+		return teamXML();
+	}
 
-	public static String[][] teamXML(File mapFile){
-		Document mapXML = LoadXML(mapFile);
+	public static String[][] teamXML(){
+		Document mapXML = getMapXML();
 		NodeList teamsNode = mapXML.getElementsByTagName("teams");
 		for (int temp = 0; temp < teamsNode.getLength(); temp++) {
 			int item = 0;
@@ -79,6 +101,7 @@ public class MapXMLLoading {
 				teamInfo[item][1]=nameNode.item(item).getAttributes().getNamedItem("max").getNodeValue();
 				teamInfo[item][2]= nameNode.item(item).getTextContent();
 				System.out.println("[TatanPGM] Found Team!: "+teamInfo[item][2]);
+				new TeamInfo(teamInfo[item][2] ,Integer.parseInt(teamInfo[item][1]));
 				item++;
 
 			}
@@ -98,6 +121,30 @@ public class MapXMLLoading {
 				}
 			}
 		}
+	}
+	/*
+	 * TODO
+	 * GET REGIONS/OBJECTIVES.
+	 * 
+	 * */
+	public static void loadWools(File mapXMLFile){
+		Document mapXML = getMapXML();
+		NodeList woolsNodeList = mapXML.getElementsByTagName("wools");
+		World scrimmageWorld = Bukkit.getWorld(currentMap.getName());
+		for(int i = 0;woolsNodeList.getLength() > i;i++){
+			Node woolByTeam = woolsNodeList.item(i);
+			String teamString = woolByTeam.getAttributes().getNamedItem("team").getNodeValue();
+			Team team = getTeamByStartsWith(teamString);
+			for(int n = 1;woolByTeam.getChildNodes().getLength() > n+1; n = n+2){
+				Node wools = woolByTeam.getChildNodes().item(n);
+				String color = wools.getAttributes().getNamedItem("color").getNodeValue();
+				String woolLocation = wools.getChildNodes().item(0).getTextContent();
+				Block woolBlock = getLocationFromString(woolLocation, scrimmageWorld).getBlock();;
+				String firstLetterToUpperCase = String.valueOf(color.charAt(0)).toUpperCase();
+				String woolName = firstLetterToUpperCase + color.substring(1) + " Wool";
+				WoolObjective.registerNewWool(woolBlock, DyeColor.valueOf(color.toUpperCase()), woolName, team);
+			}
+		}
 
 	}
 	public static Location getLocationFromString(String location, World world){
@@ -112,8 +159,7 @@ public class MapXMLLoading {
 
 
 	public static Location getSpawnLocation(Team team){
-		File mapFile = new File(currentMap.getName()+"/map.xml");
-		Document mapXML = LoadXML(mapFile);
+		Document mapXML = getMapXML();
 		Location defaultLocation = null;
 		World scrimmageWorld = Bukkit.getWorld(currentMap.getName());
 		NodeList spawnNode = null;
@@ -146,6 +192,28 @@ public class MapXMLLoading {
 
 	public static void setHeightLimit(int height){
 		heightLimit = height;
+	}
+
+	public static Team getTeamByStartsWith(String teamInputName){
+		Team teamOutput = null;
+		for(Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()){
+			String teamName = ChatColor.stripColor(team.getDisplayName());
+			if(StringUtils.startsWithIgnoreCase(teamName, teamInputName)){
+				teamOutput = team;
+			}
+		}
+		return teamOutput;
+	}
+
+	@SuppressWarnings("deprecation")
+	public static DyeColor getDyeColorFromWool(Block wool){
+		DyeColor outputColor = null;
+		if(wool.getType().equals(Material.WOOL)){
+			outputColor = DyeColor.getByData(wool.getData());
+		} else {
+			System.out.println("TYPE IS NOT WOOL!");
+		}
+		return outputColor;
 	}
 
 	public static int getHeightLimit(){

@@ -1,6 +1,5 @@
 package cl.eilers.tatanpoker09.map;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
@@ -12,37 +11,46 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
 import cl.eilers.tatanpoker09.listeners.ChatListener;
+import cl.eilers.tatanpoker09.objectives.WoolObjective;
 import cl.eilers.tatanpoker09.utils.ScoreboardUtils;
 
 public class ScoreboardLoading {
-	public static void initScoreboard(File mapFile){
+	public static void initScoreboard(){
 		Scoreboard objectivesBoard = ScoreboardUtils.scoreBManager.getNewScoreboard();	
 		ArrayList<String> scoreboardDisplays = new ArrayList<String>();
 		//Getting info from XML
-		String[][] teamInfo = MapXMLLoading.getTeamInfo(mapFile);
-		String teamOneColor = teamInfo[0][0];
+		String[][] teamInfo = MapXMLLoading.getTeamInfo();
 		//int teamOneMax = Integer.parseInt(teamInfo[0][1]);
-		String teamOneName = teamInfo[0][2];
-		String teamTwoColor = teamInfo[1][0];
-		//int teamTwoMax = Integer.parseInt(teamInfo[1][1]);
-		String teamTwoName = teamInfo[1][2];
 
+		//int teamTwoMax = Integer.parseInt(teamInfo[1][1]);
 
 		//Teams
-		ScoreboardUtils.mainBoard.getTeam("FirstTeam").setPrefix(""+ChatListener.stringToColor(teamOneColor));
-		ScoreboardUtils.mainBoard.getTeam("SecondTeam").setPrefix(""+ChatListener.stringToColor(teamTwoColor));
+		ScoreboardUtils.mainBoard.getTeam("FirstTeam").setPrefix(""+ChatListener.stringToColor(teamInfo[0][0]));
+		ScoreboardUtils.mainBoard.getTeam("FirstTeam").setDisplayName(ChatListener.stringToColor(teamInfo[0][0])+teamInfo[0][2]);
+		scoreboardDisplays.add(ChatListener.stringToColor(teamInfo[0][0])+teamInfo[0][2]);
+		for(WoolObjective wool : WoolObjective.getWools()){
+			if(wool.getTeam().equals(ScoreboardUtils.mainBoard.getTeam("FirstTeam"))){
+				String woolDisplay = " "+ChatColor.RED+wool.getName();
+				scoreboardDisplays.add(woolDisplay);
+			}
+		}
+		ScoreboardUtils.mainBoard.getTeam("SecondTeam").setPrefix(""+ChatListener.stringToColor(teamInfo[1][0]));
+		ScoreboardUtils.mainBoard.getTeam("SecondTeam").setDisplayName(ChatListener.stringToColor(teamInfo[1][0])+teamInfo[1][2]);
+		scoreboardDisplays.add(ChatListener.stringToColor(teamInfo[1][0])+teamInfo[1][2]);
+		for(WoolObjective wool : WoolObjective.getWools()){
+			if(wool.getTeam().equals(ScoreboardUtils.mainBoard.getTeam("SecondTeam"))){
+				String woolDisplay = " "+ChatColor.RED+wool.getName();
+				scoreboardDisplays.add(woolDisplay);
+			}
+		}
+		//=================================
 		ScoreboardUtils.mainBoard.getTeam("Observers").setPrefix(""+ChatColor.AQUA);
 		ScoreboardUtils.mainBoard.getTeam("Observers").setDisplayName(ChatColor.AQUA+"Observers");
-
-		ScoreboardUtils.mainBoard.getTeam("FirstTeam").setDisplayName(ChatListener.stringToColor(teamOneColor)+teamOneName);
-		ScoreboardUtils.mainBoard.getTeam("SecondTeam").setDisplayName(ChatListener.stringToColor(teamTwoColor)+teamTwoName);
+		//=================================
 
 		Objective mainObj = objectivesBoard.registerNewObjective("Objectives", "dummy");
 		mainObj.setDisplaySlot(DisplaySlot.SIDEBAR);
 		mainObj.setDisplayName(ChatColor.GOLD+"Objectives");
-		scoreboardDisplays.add(ChatListener.stringToColor(teamOneColor)+teamOneName);
-		scoreboardDisplays.add(ChatListener.stringToColor(teamTwoColor)+teamTwoName);
-		
 		
 		ScoreboardUtils.organizeScoreboard(scoreboardDisplays, objectivesBoard);
 		for(Player playersOnWorld : Bukkit.getWorld(MapXMLLoading.currentMap.getName()).getPlayers()){

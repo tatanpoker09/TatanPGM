@@ -25,3 +25,7 @@ commands:
     description: Talks to general chat.
   maps:
     description: Lists all Loaded maps.
+  setlobby:
+    description: Sets world and coordenates as the new lobby.
+  scrimmage:
+    description: Teleports you to the current Scrimmage used map.

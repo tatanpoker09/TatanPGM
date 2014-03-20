@@ -6,13 +6,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.scoreboard.Team;
 
 import cl.eilers.tatanpoker09.utils.ScoreboardUtils;
 
 
 public class ChatListener implements Listener{
 	String team;
-	ChatColor color;
+	private String color;
+	
+	public String getColor(){
+		return color;
+	}
 	@EventHandler
 	public void OnPlayerChat(AsyncPlayerChatEvent event){
 		if(event.getPlayer().getWorld().getName().equals(Bukkit.getServer().getWorlds().get(0).getName())){
@@ -21,19 +26,8 @@ public class ChatListener implements Listener{
 			team = "[Team] ";
 		}
 		String ChatMessage = event.getMessage();
-		String playerTeam = Bukkit.getServer().getScoreboardManager().getMainScoreboard().getPlayerTeam(event.getPlayer()).getName();
-
-		switch(playerTeam){
-		case("Observers"):
-			color = ChatColor.AQUA;
-		break;
-		case("FirstTeam"):
-			color = ChatColor.BLUE;
-		break;
-		case("SecondTeam"):
-			color = ChatColor.DARK_RED;
-		break;
-		}
+		Team playerTeam = ScoreboardUtils.mainBoard.getPlayerTeam(event.getPlayer());
+		color = (""+playerTeam.getDisplayName().charAt(0)+playerTeam.getDisplayName().charAt(1));
 		for(Player playersOnWorld : event.getPlayer().getWorld().getPlayers()){
 			if(ScoreboardUtils.mainBoard.getPlayerTeam(playersOnWorld).equals(ScoreboardUtils.mainBoard.getPlayerTeam(event.getPlayer()))){
 				playersOnWorld.sendMessage(color+team+event.getPlayer().getName()+ChatColor.WHITE+": "+ChatMessage);

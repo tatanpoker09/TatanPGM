@@ -64,11 +64,3 @@ public class Setnext implements CommandExecutor {
 		return returnedPath;
 	}
 }
-
-/*
- * TODO
- * CYCLE THROUGH FOLDERS AND CHECK MAP NAMES.
- * IF MAPNAME IS EQUAL TO INPUT SET IT
- * 
- * 
- */

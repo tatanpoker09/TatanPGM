@@ -17,6 +17,7 @@ import cl.eilers.tatanpoker09.commands.G;
 import cl.eilers.tatanpoker09.commands.Join;
 import cl.eilers.tatanpoker09.commands.Lobby;
 import cl.eilers.tatanpoker09.commands.Maps;
+import cl.eilers.tatanpoker09.commands.SetLobby;
 import cl.eilers.tatanpoker09.commands.SetServer;
 import cl.eilers.tatanpoker09.commands.Setnext;
 import cl.eilers.tatanpoker09.commands.Start;
@@ -58,7 +59,8 @@ public final class Scrimmage extends JavaPlugin implements Listener {
 		getCommand("end").setExecutor(new End());
 		getCommand("g").setExecutor(new G());
 		getCommand("maps").setExecutor(new Maps());
-
+		getCommand("setlobby").setExecutor(new SetLobby());
+		getCommand("scrimmage").setExecutor(new cl.eilers.tatanpoker09.commands.Scrimmage());
 		//Config Thingies
 		createYML(DontModify);
 		this.getConfig().addDefault("TatanPGM.serverName", "A TatanPGM Server!");

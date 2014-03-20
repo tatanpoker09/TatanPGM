@@ -4,6 +4,7 @@ public enum Objective {
 	core("Destroy the Core"), wool("Capture the Wool"), monument("Destroy the Monument");
 	private String gamemode;
 	private static String type;
+	private static int totalObjectives = 0;
 
 	Objective(String stringInput) {
 		gamemode = stringInput;
@@ -15,7 +16,14 @@ public enum Objective {
 	public static String getType(){
 		return type;
 	}
-	public void setType(){
-		
+	public static void setType(String newType){
+		type = newType;
+	}
+
+	public static int getTotalObjectives() {
+		return totalObjectives;
+	}
+	public static void addObjectives(int amount){
+		totalObjectives = totalObjectives+amount;
 	}
 }

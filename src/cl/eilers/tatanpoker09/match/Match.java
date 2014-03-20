@@ -15,6 +15,20 @@ public class Match {
 	public static boolean hasStarted = false;
 	public static boolean hasEnded = false;
 	private static String winner;
+	private static boolean hasAWinner = false;
+	
+	public static void setHasAWinner(boolean hasAWinner) {
+		Match.hasAWinner = hasAWinner;
+	}
+
+	public static String getWinner() {
+		return winner;
+	}
+
+	public static void setWinner(String winner) {
+		Match.winner = winner;
+	}
+
 	public static String getMatchStatus(){
 		if(hasEnded){
 			return "END";
@@ -45,26 +59,27 @@ public class Match {
 			for(Team team : ScoreboardUtils.mainBoard.getTeams()){
 				if(!team.getName().equals("Observers")){
 					for(OfflinePlayer player : team.getPlayers()){
+						player.getPlayer().setGameMode(GameMode.CREATIVE);
 						for(OfflinePlayer playerObserver : ScoreboardUtils.mainBoard.getTeam("Observers").getPlayers())
 							if(player.getPlayer()!=null){
-								player.getPlayer().setGameMode(GameMode.CREATIVE);
-								player.getPlayer().hidePlayer(playerObserver.getPlayer());
+								player.getPlayer().showPlayer(playerObserver.getPlayer());
 							}
 					}
 				}
 			}
 			Bukkit.broadcastMessage(ChatColor.DARK_PURPLE+"*******************");
-			Bukkit.broadcastMessage(ChatColor.DARK_PURPLE+"**   "+ChatColor.GOLD+"   GAME OVER"+ChatColor.DARK_PURPLE+"    **");
+			Bukkit.broadcastMessage(ChatColor.DARK_PURPLE+"**  "+ChatColor.GOLD+" GAME OVER"+ChatColor.DARK_PURPLE+"   **");
 			if(hasAWinner()){
-			Bukkit.broadcastMessage(ChatColor.DARK_PURPLE+"**  "+winner+"    **");
+			Bukkit.broadcastMessage(ChatColor.DARK_PURPLE+"**  "+winner+ChatColor.DARK_PURPLE+"    **");
 			}
 			Bukkit.broadcastMessage(ChatColor.DARK_PURPLE+"*******************");
 			hasStarted = true;
 			hasEnded = true;
 		}
 	}
+
 	private static boolean hasAWinner() {
-		return false;
+		return hasAWinner;
 	}
 
 	public static void startMatch(){
@@ -75,6 +90,7 @@ public class Match {
 						if(player.getPlayer()!=null){
 							player.getPlayer().setGameMode(GameMode.SURVIVAL);
 							player.getPlayer().getInventory().clear();
+							player.getPlayer().setExhaustion(10);
 						}
 					}
 				}

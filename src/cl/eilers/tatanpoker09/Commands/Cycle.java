@@ -32,33 +32,33 @@ public class Cycle implements CommandExecutor {
 
 	private boolean runTimer(final CommandSender sender, Command cmd, String label, String[] args){
 		if(Setnext.nextMap!=null){
-				Plugin plugin = Bukkit.getPluginManager().getPlugin("TatanPGM");
-				if(args.length<2){
-					if(CodingUtils.isNumeric(args[0])){
-						if(args[0].equals("0")){
-							MapLoader.Load();
-						} else if(Integer.parseInt(args[0])<0){
-							sender.sendMessage(ChatColor.RED+"You cannot cycle a match in less than zero seconds.");
-						} else {
-							countdown = Integer.parseInt(args[0]);
-							Scrimmage.tList.add(new Timer(plugin ,countdown));
-							Scrimmage.tList.get(0).runTaskTimer(plugin, 0L, 20L);
-							return true;
-						}
+			Plugin plugin = Bukkit.getPluginManager().getPlugin("TatanPGM");
+			if(args.length<2){
+				if(CodingUtils.isNumeric(args[0])){
+					if(args[0].equals("0")){
+						MapLoader.Load();
+					} else if(Integer.parseInt(args[0])<0){
+						sender.sendMessage(ChatColor.RED+"You cannot cycle a match in less than zero seconds.");
 					} else {
-						sender.sendMessage(ChatColor.RED+"Number expected, string received instead.");
-						return false;
+						countdown = Integer.parseInt(args[0]);
+						Scrimmage.tList.add(new Timer(plugin ,countdown));
+						Scrimmage.tList.get(0).runTaskTimer(plugin, 0L, 20L);
+						return true;
 					}
-				} else if(args.length>1){
-					sender.sendMessage(ChatColor.RED+"Too many arguments.");
-					sender.sendMessage("/cycle [-f] [seconds] - defaults to 15 seconds");
+				} else {
+					sender.sendMessage(ChatColor.RED+"Number expected, string received instead.");
 					return false;
-				} else if(args.length==0){
-					countdown = 15;
-					Scrimmage.tList.add(new Timer(plugin, countdown));
-					Scrimmage.tList.get(0).runTaskTimer(plugin, 0L, 20L);
-					return true;
 				}
+			} else if(args.length>1){
+				sender.sendMessage(ChatColor.RED+"Too many arguments.");
+				sender.sendMessage("/cycle [-f] [seconds] - defaults to 15 seconds");
+				return false;
+			} else if(args.length==0){
+				countdown = 15;
+				Scrimmage.tList.add(new Timer(plugin, countdown));
+				Scrimmage.tList.get(0).runTaskTimer(plugin, 0L, 20L);
+				return true;
+			}
 		} else {
 			sender.sendMessage(ChatColor.RED+"Please use '/setnext' first.");
 		}
