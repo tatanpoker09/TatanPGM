@@ -5,6 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -48,6 +49,15 @@ public class PlayerListener implements Listener {
 				Team damagedPlayer = ScoreboardUtils.mainBoard.getPlayerTeam(((Player) getDamaged).getPlayer());
 				Team damagerPlayer = ScoreboardUtils.mainBoard.getPlayerTeam(((Player)getDamageDealer).getPlayer());
 				if(damagedPlayer.equals("Observers")){
+					event.setCancelled(true);
+				} else if(damagedPlayer.equals(damagerPlayer)){
+					event.setCancelled(true);
+				}
+			} else if(getDamageDealer instanceof Arrow){
+				Player playerDamager = (Player) ((Arrow) getDamageDealer).getShooter();
+				Team damagerPlayer = ScoreboardUtils.mainBoard.getPlayerTeam(playerDamager);
+				Team damagedPlayer = ScoreboardUtils.mainBoard.getPlayerTeam((Player)getDamaged);
+				if(damagerPlayer.equals("Observers")){
 					event.setCancelled(true);
 				} else if(damagedPlayer.equals(damagerPlayer)){
 					event.setCancelled(true);
