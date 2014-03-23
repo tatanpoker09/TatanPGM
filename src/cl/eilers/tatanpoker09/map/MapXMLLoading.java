@@ -122,19 +122,18 @@ public class MapXMLLoading {
 			}
 		}
 	}
-	/*
-	 * TODO
-	 * GET REGIONS/OBJECTIVES.
-	 * 
-	 * */
+
+	//Loads wools from XML File
 	public static void loadWools(File mapXMLFile){
 		Document mapXML = getMapXML();
 		NodeList woolsNodeList = mapXML.getElementsByTagName("wools");
 		World scrimmageWorld = Bukkit.getWorld(currentMap.getName());
+		//Cycles through every node named "wools".
 		for(int i = 0;woolsNodeList.getLength() > i;i++){
 			Node woolByTeam = woolsNodeList.item(i);
 			String teamString = woolByTeam.getAttributes().getNamedItem("team").getNodeValue();
 			Team team = getTeamByStartsWith(teamString);
+			//For some reason ChildNodes work with grandChildNodes too... so that's why n+2.
 			for(int n = 1;woolByTeam.getChildNodes().getLength() > n+1; n = n+2){
 				Node wools = woolByTeam.getChildNodes().item(n);
 				String color = wools.getAttributes().getNamedItem("color").getNodeValue();

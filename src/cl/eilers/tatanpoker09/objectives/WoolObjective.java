@@ -14,6 +14,7 @@ public class WoolObjective{
 	private String name;
 	private Team team;
 	private boolean isPlaced = false;
+	
 	public boolean isPlaced() {
 		return isPlaced;
 	}
@@ -46,15 +47,19 @@ public class WoolObjective{
 		wools.add(wool);
 		Objective.addObjectives(1);
 	}
+	
 	public static ArrayList<WoolObjective> getWools(){
 		return wools;
 	}
+	
+	//Constructor + adds wools into arraylist.
 	public static void registerNewWool(Block blockLocation, DyeColor color, String name, Team team){
 		WoolObjective wool = new WoolObjective(blockLocation, color, name, team);
 		addWool(wool);
 		System.out.println("[TatanPGM] Found Wool!" + name);
 	}
 
+	//Checks if a team has won.
 	public static boolean teamHasWon(Team team){
 		int x = 0;
 		for(WoolObjective wool: getWools()){
@@ -64,6 +69,8 @@ public class WoolObjective{
 				}
 			}
 		}
+		//Checks if a team has placed half of all objectives in the map
+		//(other half needs to be placed by the enemy team).
 		if(x >=Objective.getTotalObjectives()/2){
 			Match.setHasAWinner(true);
 			Match.setWinner(team.getDisplayName());
