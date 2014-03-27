@@ -2,6 +2,7 @@ package cl.eilers.tatanpoker09.map;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -20,6 +21,7 @@ import org.bukkit.block.Block;
 import org.bukkit.scoreboard.Team;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -67,14 +69,6 @@ public class MapXMLLoading {
 		}
 		return doc;
 	}
-
-	/*public static ArrayList<Objective> getObjectiveTypes(File mapFile){
-		Document mapXML = LoadXML(mapFile);
-		if(mapXML!=null){
-
-		}
-	}
-	 */
 
 	public static void loadExtras(File mapXMLFile){
 		Document mapXML = getMapXML();
@@ -127,24 +121,43 @@ public class MapXMLLoading {
 	public static void loadWools(File mapXMLFile){
 		Document mapXML = getMapXML();
 		NodeList woolsNodeList = mapXML.getElementsByTagName("wools");
-		World scrimmageWorld = Bukkit.getWorld(currentMap.getName());
 		//Cycles through every node named "wools".
 		for(int i = 0;woolsNodeList.getLength() > i;i++){
 			Node woolByTeam = woolsNodeList.item(i);
-			String teamString = woolByTeam.getAttributes().getNamedItem("team").getNodeValue();
-			Team team = getTeamByStartsWith(teamString);
-			//For some reason ChildNodes work with grandChildNodes too... so that's why n+2.
-			for(int n = 1;woolByTeam.getChildNodes().getLength() > n+1; n = n+2){
-				Node wools = woolByTeam.getChildNodes().item(n);
-				String color = wools.getAttributes().getNamedItem("color").getNodeValue();
-				String woolLocation = wools.getChildNodes().item(0).getTextContent();
-				Block woolBlock = getLocationFromString(woolLocation, scrimmageWorld).getBlock();;
+			loadWoolNodes(woolByTeam);
+		}
+	}
+	private static void loadWoolNodes(Node woolNode) {
+		/*	TODO
+		 * Add Block, add childNodes.
+		 */
+		String woolName = null;
+		Block woolBlock = null;
+		String color = null;
+		Team team = null;
+		if(woolNode.hasAttributes()){
+			NamedNodeMap nodeAttributes = woolNode.getAttributes();
+			ArrayList<String> attributeNames = parseAttributeNames(nodeAttributes);
+			for(String attribute : attributeNames){
+				switch(attribute){
+				case("team"):
+					team = getTeamByStartsWith(attribute);
+				case("color"):
+					color = attribute;
 				String firstLetterToUpperCase = String.valueOf(color.charAt(0)).toUpperCase();
-				String woolName = firstLetterToUpperCase + color.substring(1) + " Wool";
-				WoolObjective.registerNewWool(woolBlock, DyeColor.valueOf(color.toUpperCase()), woolName, team);
+				woolName = firstLetterToUpperCase + color.substring(1) + " Wool";
+				}
 			}
 		}
-
+		WoolObjective.registerNewWool(woolBlock, DyeColor.valueOf(color.toUpperCase()), woolName, team);
+	}
+	
+	private static ArrayList<String> parseAttributeNames(NamedNodeMap nodeAttributes) {
+		ArrayList<String> attributeNames = new ArrayList<String>();
+		for(int n=0;nodeAttributes.getLength()>n;n++){
+			attributeNames.add(nodeAttributes.item(n).getNodeName());
+		}
+		return attributeNames;
 	}
 	public static Location getLocationFromString(String location, World world){
 		String[] locationStringArray = location.split(",");
@@ -218,4 +231,9 @@ public class MapXMLLoading {
 	public static int getHeightLimit(){
 		return heightLimit;
 	}
+	/*TODO
+	public static void loadRegions(){
+		Document mapXML = getMapXML();
+		mapXML.getElementsByTagName("regions");
+	}*/
 }

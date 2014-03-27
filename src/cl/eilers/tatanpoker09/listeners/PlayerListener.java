@@ -3,8 +3,10 @@ package cl.eilers.tatanpoker09.listeners;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -12,9 +14,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scoreboard.Team;
 
+import cl.eilers.tatanpoker09.regionsFilters.Region;
 import cl.eilers.tatanpoker09.utils.ScoreboardUtils;
 
 public class PlayerListener implements Listener {
@@ -61,6 +65,22 @@ public class PlayerListener implements Listener {
 					event.setCancelled(true);
 				} else if(damagedPlayer.equals(damagerPlayer)){
 					event.setCancelled(true);
+				}
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerMove(PlayerMoveEvent event){
+		Location playerLoc = event.getPlayer().getLocation();
+		for(Region region : Region.getRegions()){
+			Block minRegionBlock = region.getMin();
+			Block maxRegionBlock = region.getMax();
+			if(minRegionBlock.getX()<playerLoc.getX() && maxRegionBlock.getX()>playerLoc.getX()){
+				if(minRegionBlock.getY()<playerLoc.getY() && maxRegionBlock.getY()>playerLoc.getY()){
+					if(minRegionBlock.getZ()<playerLoc.getZ() && maxRegionBlock.getZ()>playerLoc.getZ()){
+						System.out.println("Player: "+event.getPlayer()+"Is in boundaries!: "+region.getName());
+					}
 				}
 			}
 		}
