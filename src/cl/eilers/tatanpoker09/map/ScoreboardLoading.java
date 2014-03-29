@@ -1,6 +1,6 @@
 package cl.eilers.tatanpoker09.map;
 
-import java.util.ArrayList;
+import java.util.ArrayList; 
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

@@ -1,6 +1,6 @@
 package cl.eilers.tatanpoker09.objectives;
 
-import java.util.ArrayList;
+import java.util.ArrayList; 
 
 import org.bukkit.DyeColor;
 import org.bukkit.block.Block;
@@ -64,13 +64,16 @@ public class WoolObjective{
 		int x = 0;
 		for(WoolObjective wool: getWools()){
 			if(wool.getTeam().equals(team)){
-				if(wool.isPlaced()){
+				System.out.println(wool.isPlaced);
+				if(wool.isPlaced()){	
 					x++;
 				}
 			}
 		}
 		//Checks if a team has placed half of all objectives in the map
 		//(other half needs to be placed by the enemy team).
+		System.out.println("Total: "+Objective.getTotalObjectives());
+		System.out.println("Placed: "+x);
 		if(x >=Objective.getTotalObjectives()/2){
 			Match.setHasAWinner(true);
 			Match.setWinner(team.getDisplayName());

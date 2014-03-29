@@ -1,6 +1,6 @@
 package cl.eilers.tatanpoker09.listeners;
 
-import org.bukkit.Bukkit;
+import org.bukkit.Bukkit; 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,7 +20,7 @@ public class ChatListener implements Listener{
 	}
 	@EventHandler
 	public void OnPlayerChat(AsyncPlayerChatEvent event){
-		if(event.getPlayer().getWorld().getName().equals(Bukkit.getServer().getWorlds().get(0).getName())){
+		if(event.getPlayer().getWorld().equals(Bukkit.getServer().getWorlds().get(0))){
 			team = "";
 		} else {
 			team = "[Team] ";
@@ -31,7 +31,6 @@ public class ChatListener implements Listener{
 		for(Player playersOnWorld : event.getPlayer().getWorld().getPlayers()){
 			if(ScoreboardUtils.mainBoard.getPlayerTeam(playersOnWorld).equals(ScoreboardUtils.mainBoard.getPlayerTeam(event.getPlayer()))){
 				playersOnWorld.sendMessage(color+team+event.getPlayer().getName()+ChatColor.WHITE+": "+ChatMessage);
-				System.out.println(color+team+event.getPlayer().getName()+ChatColor.WHITE+": "+ChatMessage);
 			}
 		}
 		event.setCancelled(true);

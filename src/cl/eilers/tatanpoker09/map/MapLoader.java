@@ -1,6 +1,6 @@
 package cl.eilers.tatanpoker09.map;
 
-import java.io.File;
+import java.io.File; 
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -24,7 +24,6 @@ public class MapLoader {
 			for(int i = 1; fileNotExist; i++){
 				if(dest.exists()){
 					dest = new File("playing"+Setnext.nextMap+i);
-					System.out.println("Value of 'i' is now:" + i);
 				} else {
 					dest = new File("playing"+Setnext.nextMap+ Integer.toString((int)i));
 					fileNotExist = false;

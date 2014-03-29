@@ -53,6 +53,7 @@ public class MapXMLLoading {
 	public static Document LoadXML(File mapXML){
 		Document doc = null;
 		if(mapXML.exists()){
+			System.out.println("");
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder;
 			try {
@@ -124,10 +125,19 @@ public class MapXMLLoading {
 		//Cycles through every node named "wools".
 		for(int i = 0;woolsNodeList.getLength() > i;i++){
 			Node woolByTeam = woolsNodeList.item(i);
-			loadWoolNodes(woolByTeam);
+			ArrayList<Node> nodeList = new ArrayList<Node>();
+			nodeList.add(woolByTeam);
+			for(int n = 0;woolByTeam.getChildNodes().getLength()>n;n++){
+				Node woolChildNode = woolByTeam.getChildNodes().item(n);
+				if(woolChildNode instanceof Element){
+					nodeList.add(woolChildNode.getFirstChild());
+					nodeList.add(woolChildNode);
+				}
+			}
+			loadWoolNodes(nodeList);
 		}
 	}
-	private static void loadWoolNodes(Node woolNode) {
+	private static void loadWoolNodes(ArrayList<Node> nodes) {
 		/*	TODO
 		 * Add Block, add childNodes.
 		 */
@@ -135,27 +145,40 @@ public class MapXMLLoading {
 		Block woolBlock = null;
 		String color = null;
 		Team team = null;
-		if(woolNode.hasAttributes()){
-			NamedNodeMap nodeAttributes = woolNode.getAttributes();
-			ArrayList<String> attributeNames = parseAttributeNames(nodeAttributes);
-			for(String attribute : attributeNames){
-				switch(attribute){
-				case("team"):
-					team = getTeamByStartsWith(attribute);
-				case("color"):
-					color = attribute;
-				String firstLetterToUpperCase = String.valueOf(color.charAt(0)).toUpperCase();
-				woolName = firstLetterToUpperCase + color.substring(1) + " Wool";
+		int numberOfWools = 0;
+		for(Node node : nodes){
+			if(node.getNodeName().equals("wool")){
+				numberOfWools++;
+			}
+			if(node.hasAttributes()){
+				NamedNodeMap nodeAttributes = node.getAttributes();
+				ArrayList<Node> attributeNames = parseAttributeNames(nodeAttributes);
+				for(Node attribute : attributeNames){
+					switch(attribute.getNodeName()){
+					case("team"):
+						team = getTeamByStartsWith(attribute.getNodeValue());
+					break;
+					case("color"):
+						color = attribute.getNodeValue();
+					break;
+					}
 				}
 			}
+			if(node.getNodeName().equals("block")){
+				woolBlock = getLocationFromString(node.getTextContent(), Bukkit.getWorld(getCurrentMap().getName())).getBlock();
+			}
+			if(numberOfWools>0){
+				String firstLetterToUpperCase = String.valueOf(color.charAt(0)).toUpperCase();
+				woolName = firstLetterToUpperCase + color.substring(1) + " Wool";
+				WoolObjective.registerNewWool(woolBlock, DyeColor.valueOf(color.toUpperCase()), woolName, team);
+			}
 		}
-		WoolObjective.registerNewWool(woolBlock, DyeColor.valueOf(color.toUpperCase()), woolName, team);
 	}
-	
-	private static ArrayList<String> parseAttributeNames(NamedNodeMap nodeAttributes) {
-		ArrayList<String> attributeNames = new ArrayList<String>();
+
+	private static ArrayList<Node> parseAttributeNames(NamedNodeMap nodeAttributes) {
+		ArrayList<Node> attributeNames = new ArrayList<Node>();
 		for(int n=0;nodeAttributes.getLength()>n;n++){
-			attributeNames.add(nodeAttributes.item(n).getNodeName());
+			attributeNames.add(nodeAttributes.item(n));
 		}
 		return attributeNames;
 	}
